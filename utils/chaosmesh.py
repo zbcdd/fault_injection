@@ -25,3 +25,4 @@ def check_all_chaosmesh_status(kinds: List[str]) -> None:
             logging.error(f'Find {kind}, output: {output_str}')
             raise Exception(f'Find {kind}, output: {output_str}')
         logging.info(f'Chaosmesh {kind} clean!')
+    logging.info('Check chaosmesh status successfully! All clean.')

@@ -1,11 +1,13 @@
 import logging
-import subprocess
 from abc import ABCMeta, abstractmethod, ABC
 from utils.chaosblade import execute_cmd as chaosblade_cmd
 from utils.chaosmesh import execute_cmd as chaosmesh_cmd
 
 
 class BasicCommand(metaclass=ABCMeta):
+    def __init__(self, duration: int, interval: int):
+        self.duration = duration
+        self.interval = interval
 
     @abstractmethod
     def init(self):
@@ -22,10 +24,14 @@ class BasicCommand(metaclass=ABCMeta):
 
 class ChaosBladeCommand(BasicCommand, ABC):
 
-    def __init__(self):
+    def __init__(self, duration: int, interval: int):
+        super(ChaosBladeCommand, self).__init__(duration, interval)
         self.ip = None
         self.cmd = None
         self.res = None
+
+    def __str__(self):
+        return f'[chaosblade cmd] ip: {self.ip}, cmd: {self.cmd}, res: {self.res}'
 
     def execute(self):
         self.init()
@@ -42,8 +48,12 @@ class ChaosBladeCommand(BasicCommand, ABC):
 
 class ChaosMeshCommand(BasicCommand, ABC):
 
-    def __init__(self):
+    def __init__(self, duration: int, interval: int):
+        super(ChaosMeshCommand, self).__init__(duration, interval)
         self.k8s_yaml_path = None
+
+    def __str__(self):
+        return f'[chaosmesh cmd] k8s_yaml_path: {self.k8s_yaml_path}'
 
     def execute(self):
         assert self.k8s_yaml_path is not None
