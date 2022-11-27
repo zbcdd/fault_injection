@@ -1,6 +1,6 @@
 import kubernetes
 from kubernetes import client
-from typing import Tuple
+from typing import Tuple, List
 
 
 def get_one_container_id_with_host_ip(namespace: str, service_name: str) -> Tuple[str, str]:
@@ -26,6 +26,17 @@ def get_one_src_name_dest_ip(namespace: str, src: str, dest: str) -> Tuple[str, 
     return src_pod_name, dest_pod_ip
 
 
+def get_all_src_names_dest_ips(namespace: str, src: str, dest: str) -> Tuple[List[str], List[str]]:
+    pods = client.CoreV1Api().list_namespaced_pod(namespace)
+    src_pod_names, dest_pod_ips = [], []
+    for pod in pods.items:
+        if pod.metadata.name.startswith(src):
+            src_pod_names.append(pod.metadata.name)
+        if pod.metadata.name.startswith(dest):
+            dest_pod_ips.append(pod.status.pod_ip)
+    return src_pod_names, dest_pod_ips
+
+
 if __name__ == '__main__':
     kubernetes.config.load_kube_config('../config/k8s/kube_config_154')
-    print(get_one_src_name_dest_ip('default', 'ts-verification-code-service', 'ts-basic-service'))
+    print(get_all_src_names_dest_ips('default', 'ts-verification-code-service', 'ts-basic-service'))
