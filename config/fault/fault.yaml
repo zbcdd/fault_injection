@@ -140,7 +140,7 @@ injection:
         interval: 300  # (s) interval between two adjacent faults
         interface: eth0
       targets:  # src dest
-        - ts-preserve-service ts-food-service
+        - ts-preserve-service ts-basic-service
         - ts-seat-service ts-order-other-service
         - ts-preserve-service ts-assurance-service
         - ts-cancel-service ts-notification-service
@@ -171,7 +171,6 @@ injection:
         - ts-cancel-service ts-order-service
         - ts-travel2-service ts-train-service
         - ts-cancel-service ts-inside-payment-service
-        - ts-preserve-service ts-basic-service
     svc-svc-network-drop:
       info:
         duration: 300  # (s) duration of each fault

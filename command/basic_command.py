@@ -55,7 +55,6 @@ class ChaosMeshCommand(BasicCommand, ABC):
     def __init__(self, duration: int, interval: int):
         super(ChaosMeshCommand, self).__init__(duration, interval)
         self.k8s_yaml_path = None
-        self.init()
 
     def __str__(self):
         return f'[chaosmesh cmd] k8s_yaml_path: {self.k8s_yaml_path}'

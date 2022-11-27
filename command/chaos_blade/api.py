@@ -33,19 +33,23 @@ class ApiDelay(ChaosBladeCommand):
         self.time = time
         self.namespace = namespace
 
+    def __str__(self):
+        return f'[api-delay] service: {self.service} classname: {self.classname} methodname: {self.methodname} ' \
+               f'time: {self.time} namespace: {self.namespace}'
+
     def init(self):
         container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.service)
         if not container_id or not host_ip:
             logging.error(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
             raise Exception(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
         self.ip = host_ip
-        self.cmd = f'create cri jvm delay \
-                    --chaosblade-release ~/chaosblade/chaosblade-1.5.0-linux-amd64.tar.gz \
-                    --classname {self.classname} \
-                    --methodname {self.methodname} \
-                    --container-id {container_id} \
-                    --pid 1 \
-                    --time {self.time}'
+        self.cmd = f'create cri jvm delay ' \
+                   f'--chaosblade-release ~/chaosblade/chaosblade-1.5.0-linux-amd64.tar.gz ' \
+                   f'--classname {self.classname} ' \
+                   f'--methodname {self.methodname} ' \
+                   f'--container-id {container_id} ' \
+                   f'--pid 1 ' \
+                   f'--time {self.time}'
 
 
 class ApiException(ChaosBladeCommand):
@@ -75,16 +79,20 @@ class ApiException(ChaosBladeCommand):
         self.methodname = methodname
         self.namespace = namespace
 
+    def __str__(self):
+        return f'[api-exception] service: {self.service} classname: {self.classname} ' \
+               f'methodname: {self.methodname} namespace: {self.namespace}'
+
     def init(self):
         container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.service)
         if not container_id or not host_ip:
             logging.error(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
             raise Exception(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
         self.ip = host_ip
-        self.cmd = f'create cri jvm throwCustomException \
-                    --chaosblade-release ~/chaosblade/chaosblade-1.5.0-linux-amd64.tar.gz \
-                    --classname {self.classname} \
-                    --methodname {self.methodname} \
-                    --container-id {container_id} \
-                    --pid 1 \
-                    --exception java.lang.Exception'
+        self.cmd = f'create cri jvm throwCustomException ' \
+                   f'--chaosblade-release ~/chaosblade/chaosblade-1.5.0-linux-amd64.tar.gz ' \
+                   f'--classname {self.classname} ' \
+                   f'--methodname {self.methodname} ' \
+                   f'--container-id {container_id} ' \
+                   f'--pid 1 ' \
+                   f'--exception java.lang.Exception'

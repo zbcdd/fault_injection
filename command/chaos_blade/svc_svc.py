@@ -32,15 +32,19 @@ class SvcSvcNetworkDelay(ChaosBladeCommand):
         self.time = time
         self.namespace = namespace
 
+    def __str__(self):
+        return f'[svc-svc-network-delay] ip: {self.ip} src: {self.src} dest: {self.dest} ' \
+               f'interface: {self.interface} time: {self.time} namespace: {self.namespace}'
+
     def init(self):
         src_pod_names, dest_pod_ips = get_all_src_names_dest_ips(self.namespace, self.src, self.dest)
-        self.cmd = f"create k8s pod-network delay \
-                    --namespace {self.namespace} \
-                    --names {','.join(src_pod_names)} \
-                    --interface {self.interface} \
-                    --destination-ip {','.join(dest_pod_ips)} \
-                    --time {self.time} \
-                    --kubeconfig ~/.kube/config"
+        self.cmd = f"create k8s pod-network delay " \
+                   f"--namespace {self.namespace} " \
+                   f"--names {','.join(src_pod_names)} " \
+                   f"--interface {self.interface} " \
+                   f"--destination-ip {','.join(dest_pod_ips)} " \
+                   f"--time {self.time} " \
+                   f"--kubeconfig ~/.kube/config"
 
 
 class SvcSvcNetworkDrop(ChaosBladeCommand):
@@ -73,13 +77,17 @@ class SvcSvcNetworkDrop(ChaosBladeCommand):
         self.interface = interface
         self.namespace = namespace
 
+    def __str__(self):
+        return f'[svc-svc-network-drop] ip: {self.ip} src: {self.src} dest: {self.dest} ' \
+               f'interface: {self.interface} namespace: {self.namespace}'
+
     def init(self):
         src_pod_names, dest_pod_ips = get_all_src_names_dest_ips(self.namespace, self.src, self.dest)
-        self.cmd = f"create k8s container-network drop \
-                    --namespace {self.namespace} \
-                    --names {','.join(src_pod_names)} \
-                    --container-names {self.src} \
-                    --destination-ip {','.join(dest_pod_ips)} \
-                    --network-traffic out \
-                    --use-sidecar-container-network \
-                    --kubeconfig ~/.kube/config"
+        self.cmd = f"create k8s container-network drop " \
+                   f"--namespace {self.namespace} " \
+                   f"--names {','.join(src_pod_names)} " \
+                   f"--container-names {self.src} " \
+                   f"--destination-ip {','.join(dest_pod_ips)} " \
+                   f"--network-traffic out " \
+                   f"--use-sidecar-container-network " \
+                   f"--kubeconfig ~/.kube/config"

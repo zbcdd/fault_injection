@@ -35,8 +35,3 @@ def get_all_src_names_dest_ips(namespace: str, src: str, dest: str) -> Tuple[Lis
         if pod.metadata.name.startswith(dest):
             dest_pod_ips.append(pod.status.pod_ip)
     return src_pod_names, dest_pod_ips
-
-
-if __name__ == '__main__':
-    kubernetes.config.load_kube_config('../config/k8s/kube_config_154')
-    print(get_all_src_names_dest_ips('default', 'ts-verification-code-service', 'ts-basic-service'))

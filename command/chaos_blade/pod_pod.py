@@ -32,15 +32,19 @@ class PodPodNetworkDelay(ChaosBladeCommand):
         self.time = time
         self.namespace = namespace
 
+    def __str__(self):
+        return f'[pod-pod-network-delay] ip: {self.ip} src: {self.src} dest: {self.dest} ' \
+               f'interface: {self.interface} time: {self.time} namespace: {self.namespace}'
+
     def init(self):
         src_pod_name, dest_pod_ip = get_one_src_name_dest_ip(self.namespace, self.src, self.dest)
-        self.cmd = f'create k8s pod-network delay \
-                    --namespace {self.namespace} \
-                    --names {src_pod_name} \
-                    --interface {self.interface} \
-                    --destination-ip {dest_pod_ip} \
-                    --time {self.time} \
-                    --kubeconfig ~/.kube/config'
+        self.cmd = f'create k8s pod-network delay ' \
+                   f'--namespace {self.namespace} ' \
+                   f'--names {src_pod_name} ' \
+                   f'--interface {self.interface} ' \
+                   f'--destination-ip {dest_pod_ip} ' \
+                   f'--time {self.time} ' \
+                   f'--kubeconfig ~/.kube/config'
 
 
 class PodPodNetworkDrop(ChaosBladeCommand):
@@ -73,13 +77,17 @@ class PodPodNetworkDrop(ChaosBladeCommand):
         self.interface = interface
         self.namespace = namespace
 
+    def __str__(self):
+        return f'[pod-pod-network-drop] ip: {self.ip} src: {self.src} dest: {self.dest} ' \
+               f'interface: {self.interface} namespace: {self.namespace}'
+
     def init(self):
         src_pod_name, dest_pod_ip = get_one_src_name_dest_ip(self.namespace, self.src, self.dest)
-        self.cmd = f'create k8s container-network drop \
-                    --namespace {self.namespace} \
-                    --names {src_pod_name} \
-                    --container-names {self.src} \
-                    --destination-ip {dest_pod_ip} \
-                    --network-traffic out \
-                    --use-sidecar-container-network \
-                    --kubeconfig ~/.kube/config'
+        self.cmd = f'create k8s container-network drop ' \
+                   f'--namespace {self.namespace} ' \
+                   f'--names {src_pod_name} ' \
+                   f'--container-names {self.src} ' \
+                   f'--destination-ip {dest_pod_ip} ' \
+                   f'--network-traffic out ' \
+                   f'--use-sidecar-container-network ' \
+                   f'--kubeconfig ~/.kube/config'

@@ -1,11 +1,11 @@
 import logging
 from typing import Dict
 from .basic_command import BasicCommand
-from chaos_blade.api import ApiDelay, ApiException
-from chaos_blade.pod_pod import PodPodNetworkDelay, PodPodNetworkDrop
-from chaos_blade.svc_svc import SvcSvcNetworkDelay, SvcSvcNetworkDrop
-from chaos_mesh.pod import PodHttpRequestDelay, PodHttpRequestAbort
-from chaos_mesh.svc import SvcHttpRequestDelay, SvcHttpRequestAbort
+from .chaos_blade.api import ApiDelay, ApiException
+from .chaos_blade.pod_pod import PodPodNetworkDelay, PodPodNetworkDrop
+from .chaos_blade.svc_svc import SvcSvcNetworkDelay, SvcSvcNetworkDrop
+from .chaos_mesh.pod import PodHttpRequestDelay, PodHttpRequestAbort
+from .chaos_mesh.svc import SvcHttpRequestDelay, SvcHttpRequestAbort
 
 
 class CommandBuilder(object):
@@ -27,7 +27,7 @@ class CommandBuilder(object):
             if command_name == 'api-exception':
                 return ApiException(service, classname, methodname, duration, interval, namespace)
 
-        if command_name.startswith(['pod-http', 'svc-http']):
+        if command_name.startswith(('pod-http', 'svc-http')):
             app, port = target.strip().split()
             if command_name == 'pod-http-request-delay':
                 return PodHttpRequestDelay(tmp_dir, app, port, time, duration, interval, namespace)
@@ -38,7 +38,7 @@ class CommandBuilder(object):
             if command_name == 'svc-http-request-abort':
                 return SvcHttpRequestAbort(tmp_dir, app, port, duration, interval, namespace)
 
-        if command_name.startswith(['pod-pod-network', 'svc-svc-network']):
+        if command_name.startswith(('pod-pod-network', 'svc-svc-network')):
             src, dest = target.strip().split()
             if command_name == 'pod-pod-network-delay':
                 return PodPodNetworkDelay(k8s_master_ip, src, dest, interface, time, duration, interval, namespace)

@@ -45,7 +45,7 @@ def _fault_injection(k8s: str, fault: str) -> None:
     for fault_name in faults:
         fault = spec[fault_name]
         fault_info = fault['info']
-        fault_info['tt_namespace'] = tt_namespace
+        fault_info['namespace'] = tt_namespace
         fault_info['chaosmesh_tmp_dir'] = chaosmesh_tmp_dir
         fault_info['fault_name'] = fault_name
         fault_info['k8s_master_ip'] = k8s_master_ip

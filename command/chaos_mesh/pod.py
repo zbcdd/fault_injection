@@ -23,6 +23,11 @@ class PodHttpRequestDelay(ChaosMeshCommand):
         self.port = port
         self.time = time
         self.namespace = namespace
+        self.init()
+
+    def __str__(self):
+        return f'[pod-http-request-delay] app: {self.app} port: {self.port} ' \
+               f'time: {self.time} namespace: {self.namespace}'
 
     def init(self):
         name = f'pod-http-request-delay.{self.app}'
@@ -36,7 +41,8 @@ class PodHttpRequestDelay(ChaosMeshCommand):
             'delay': f'{self.time}ms',
             'duration': f'{self.duration}s'
         }
-        with open('./templates/http_request_delay.yaml', 'r', encoding='utf-8') as f:
+        template_path = os.path.join(os.path.dirname(__file__), 'templates', 'http_request_delay.yaml')
+        with open(template_path, 'r', encoding='utf-8') as f:
             res = Template(f.read()).substitute(values)
             dump_yaml(yaml.safe_load(stream=res), self.k8s_yaml_path)
 
@@ -57,6 +63,10 @@ class PodHttpRequestAbort(ChaosMeshCommand):
         self.app = app
         self.port = port
         self.namespace = namespace
+        self.init()
+
+    def __str__(self):
+        return f'[pod-http-request-abort] app: {self.app} port: {self.port} namespace: {self.namespace}'
 
     def init(self):
         name = f'pod-http-request-abort.{self.app}'
@@ -69,6 +79,7 @@ class PodHttpRequestAbort(ChaosMeshCommand):
             'port': self.port,
             'duration': f'{self.duration}s'
         }
-        with open('./templates/http_request_abort.yaml', 'r', encoding='utf-8') as f:
+        template_path = os.path.join(os.path.dirname(__file__), 'templates', 'http_request_abort.yaml')
+        with open(template_path, 'r', encoding='utf-8') as f:
             res = Template(f.read()).substitute(values)
             dump_yaml(yaml.safe_load(stream=res), self.k8s_yaml_path)

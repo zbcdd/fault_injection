@@ -2,7 +2,7 @@ import subprocess
 import logging
 import json
 from typing import Tuple, List, Dict
-from net import retry_session
+from .net import retry_session
 from datetime import datetime, timedelta
 
 
@@ -49,9 +49,3 @@ def get_chaosmesh_records(url: str, st_time: datetime, ed_time: datetime) -> Lis
             res.append(item)
 
     return res
-
-
-if __name__ == '__main__':
-    st_time = datetime.strptime('2022-11-27T20:12:42', '%Y-%m-%dT%H:%M:%S')
-    ed_time = datetime.strptime('2022-11-27T20:12:42', '%Y-%m-%dT%H:%M:%S')
-    print(get_chaosmesh_records('http://10.176.122.154:30331/api/events', st_time, ed_time))

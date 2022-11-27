@@ -1,7 +1,7 @@
 import json
 import logging
 from datetime import datetime
-from net import retry_session
+from .net import retry_session
 from typing import Dict, List
 
 

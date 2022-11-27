@@ -3,8 +3,8 @@ import os.path
 import pandas as pd
 from typing import List
 from datetime import datetime
-from chaosblade import get_all_ips_chaosblade_records
-from chaosmesh import get_chaosmesh_records
+from .chaosblade import get_all_ips_chaosblade_records
+from .chaosmesh import get_chaosmesh_records
 from typing import Dict
 
 
@@ -132,8 +132,10 @@ def get_records(chaosblade_ips: List[str], chaosmesh_url: str, chaosmesh_tmp_dir
         apply_targets = sorted(apply_targets)
         recover_targets = sorted(recover_targets)
         if apply_targets != recover_targets:
-            logging.error(f'chaosmesh apply records did not match the recover records. apply: {apply_targets}, recover: {recover_targets}')
-            raise Exception(f'chaosmesh apply records did not match the recover records. apply: {apply_targets}, recover: {recover_targets}')
+            logging.error(
+                f'chaosmesh apply records did not match the recover records. apply: {apply_targets}, recover: {recover_targets}')
+            raise Exception(
+                f'chaosmesh apply records did not match the recover records. apply: {apply_targets}, recover: {recover_targets}')
         data['uid'].append(uid)
         data['tool'].append('chaosmesh')
         data['ip'].append('k8s-master')
@@ -146,12 +148,6 @@ def get_records(chaosblade_ips: List[str], chaosmesh_url: str, chaosmesh_tmp_dir
         with open(os.path.join(chaosmesh_tmp_dir, f'{name}.yaml'), 'r', encoding='utf-8') as f:
             data['cmd'].append(f.read().replace('\n', '\\n'))
 
-        df = pd.DataFrame(data)
-        df = df.sort_values('st_time')
-        return df
-
-
-if __name__ == '__main__':
-    with open('../command/chaos_mesh/templates/http_request_delay.yaml', 'r', encoding='utf-8') as f:
-        print(f.read().replace('\n', '\\n'))
-
+    df = pd.DataFrame(data)
+    df = df.sort_values('st_time')
+    return df

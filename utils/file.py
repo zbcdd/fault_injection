@@ -16,5 +16,6 @@ def load_yaml(filepath: str) -> Dict:
 
 
 def dump_yaml(data: Dict, filepath: str) -> None:
+    make_sure_dir_exists(filepath)
     with open(filepath, 'w', encoding='utf-8') as f:
         yaml.dump(data, f)
