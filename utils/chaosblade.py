@@ -43,3 +43,10 @@ def get_chaosblade_records(ip: str, st_time: datetime, ed_time: datetime) -> Lis
         return st_time <= create_time <= ed_time
 
     return [record for record in records if time_filter(record)]
+
+
+def get_all_ips_chaosblade_records(ips: List[str], st_time: datetime, ed_time: datetime) -> Dict[str, List[Dict]]:
+    res = {}
+    for ip in ips:
+        res[ip] = get_chaosblade_records(ip, st_time, ed_time)
+    return res

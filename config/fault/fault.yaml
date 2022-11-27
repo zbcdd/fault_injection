@@ -4,6 +4,7 @@ logs:
 
 records:
   dir: ./records/
+  chaosmesh_records: http://10.176.122.154:30331/api/events  # chaosmesh events query url
 
 injection:
   metadata:

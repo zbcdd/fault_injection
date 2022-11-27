@@ -1,6 +1,9 @@
 import subprocess
 import logging
-from typing import Tuple, List
+import json
+from typing import Tuple, List, Dict
+from net import retry_session
+from datetime import datetime, timedelta
 
 
 def execute_cmd(cmd: str) -> Tuple[int, str]:
@@ -28,5 +31,27 @@ def check_all_chaosmesh_status(kinds: List[str]) -> None:
     logging.info('Check chaosmesh status successfully! All clean.')
 
 
-def get_chaosmesh_record(ip: str, st_time: datetime, ed_time: datetime) -> List[Dict]:
-    TODO
+def get_chaosmesh_records(url: str, st_time: datetime, ed_time: datetime) -> List[Dict]:
+    session = retry_session(retries=5)
+    records = json.loads(session.get(url).text)
+
+    def time_filter(record: Dict) -> Tuple[bool, datetime]:
+        create_time_str = record['created_at']
+        create_time = datetime.strptime(create_time_str, '%Y-%m-%dT%H:%M:%SZ')
+        create_time += timedelta(hours=8)
+        return st_time <= create_time <= ed_time, create_time
+
+    res = []
+    for item in records:
+        select, create_time = time_filter(item)
+        if select:
+            item['create_time'] = create_time.strftime('%Y-%m-%dT%H:%M:%S')
+            res.append(item)
+
+    return res
+
+
+if __name__ == '__main__':
+    st_time = datetime.strptime('2022-11-27T20:12:42', '%Y-%m-%dT%H:%M:%S')
+    ed_time = datetime.strptime('2022-11-27T20:12:42', '%Y-%m-%dT%H:%M:%S')
+    print(get_chaosmesh_records('http://10.176.122.154:30331/api/events', st_time, ed_time))

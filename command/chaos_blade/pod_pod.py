@@ -1,4 +1,4 @@
-from command import ChaosBladeCommand
+from command.basic_command import ChaosBladeCommand
 from utils.k8s import get_one_src_name_dest_ip
 
 

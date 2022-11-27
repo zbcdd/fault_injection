@@ -3,3 +3,4 @@ click
 kubernetes
 apscheduler
 pyyaml
+pandas

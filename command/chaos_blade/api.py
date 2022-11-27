@@ -1,6 +1,6 @@
 import logging
 
-from command import ChaosBladeCommand
+from command.basic_command import ChaosBladeCommand
 from utils.k8s import get_one_container_id_with_host_ip
 
 

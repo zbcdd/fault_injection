@@ -2,7 +2,7 @@ import os
 import yaml
 from string import Template
 from utils.file import dump_yaml
-from command import ChaosMeshCommand
+from command.basic_command import ChaosMeshCommand
 
 
 class SvcHttpRequestDelay(ChaosMeshCommand):

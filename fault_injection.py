@@ -9,6 +9,7 @@ from command.command_scheduler import CommandScheduler
 from utils.file import load_yaml, make_sure_dir_exists
 from utils.chaosblade import check_all_chaosblade_status
 from utils.chaosmesh import check_all_chaosmesh_status
+from utils.records import get_records
 
 
 @click.command()
@@ -67,7 +68,14 @@ def _fault_injection(k8s: str, fault: str) -> None:
         command_scheduler.shutdown()
 
     # get record
-
+    st_time_str = str(st_time).replace(' ', 'T')
+    final_time_str = str(final_time).replace(' ', 'T')
+    record_path = os.path.join(fault_config['records']['dir'], f'{st_time_str}_{final_time_str}.csv')
+    make_sure_dir_exists(record_path)
+    chaosmesh_url = fault_config['records']['chaosmesh_records']
+    df = get_records(ips, chaosmesh_url, chaosmesh_tmp_dir, st_time, final_time)
+    df.to_csv(record_path, index=False)
+    logging.info(f'records saved at {record_path}, st_time: {st_time}, final_time: {final_time}')
 
 
 if __name__ == '__main__':
