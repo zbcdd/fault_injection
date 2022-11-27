@@ -1,0 +1,16 @@
+k8s:
+  k8s-master:
+    - name: k8s-master
+      ip: 10.176.122.154
+  k8s-nodes:
+    - name: k8s-node1
+      ip: 10.176.122.151
+    - name: k8s-node2
+      ip: 10.176.122.152
+    - name: k8s-node3
+      ip: 10.176.122.153
+    - name: k8s-node4
+      ip: 10.176.122.161
+    - name: k8s-node5
+      ip: 10.176.122.162
+  kube_config: ./config/k8s/kube_config_154
