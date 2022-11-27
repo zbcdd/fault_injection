@@ -13,6 +13,19 @@ def get_one_container_id_with_host_ip(namespace: str, service_name: str) -> Tupl
     return '', ''
 
 
+def get_one_src_name_dest_ip(namespace: str, src: str, dest: str) -> Tuple[str, str]:
+    pods = client.CoreV1Api().list_namespaced_pod(namespace)
+    src_pod_name, dest_pod_ip = '', ''
+    for pod in pods.items:
+        if not src_pod_name and pod.metadata.name.startswith(src):
+            src_pod_name = pod.metadata.name
+        if not dest_pod_ip and pod.metadata.name.startswith(dest):
+            dest_pod_ip = pod.status.pod_ip
+        if src_pod_name and dest_pod_ip:
+            break
+    return src_pod_name, dest_pod_ip
+
+
 if __name__ == '__main__':
     kubernetes.config.load_kube_config('../config/k8s/kube_config_154')
-    get_one_container_id_with_host_ip('default', 'ts-verification-code-service')
+    print(get_one_src_name_dest_ip('default', 'ts-verification-code-service', 'ts-basic-service'))

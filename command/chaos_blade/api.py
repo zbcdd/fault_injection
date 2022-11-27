@@ -1,5 +1,7 @@
-from command.command_register import command_register
+import logging
+
 from command import ChaosBladeCommand
+from command.command_register import command_register
 from utils.k8s import get_one_container_id_with_host_ip
 
 
@@ -35,6 +37,9 @@ class ApiDelay(ChaosBladeCommand):
 
     def init(self):
         container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.service)
+        if not container_id or not host_ip:
+            logging.error(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
+            raise Exception(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
         self.ip = host_ip
         self.cmd = f'create cri jvm delay \
                     --chaosblade-release ~/chaosblade/chaosblade-1.5.0-linux-amd64.tar.gz \
@@ -75,6 +80,9 @@ class ApiException(ChaosBladeCommand):
 
     def init(self):
         container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.service)
+        if not container_id or not host_ip:
+            logging.error(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
+            raise Exception(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
         self.ip = host_ip
         self.cmd = f'create cri jvm throwCustomException \
                     --chaosblade-release ~/chaosblade/chaosblade-1.5.0-linux-amd64.tar.gz \

@@ -1,4 +1,6 @@
+from command import ChaosBladeCommand
 from command.command_register import command_register
+
 
 @command_register('svc-svc-network-delay')
 class SvcSvcNetworkDelay:
