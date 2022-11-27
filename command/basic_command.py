@@ -11,6 +11,10 @@ class BasicCommand(metaclass=ABCMeta):
 
     @abstractmethod
     def init(self):
+        """Init command.
+        For ChaosBladeCommand, self.init() will be done at execute command stage.
+        For ChaosMeshCommand, self.init() will be done at scheduler stage(when create the command).
+        """
         raise NotImplementedError()
 
     @abstractmethod
@@ -51,6 +55,7 @@ class ChaosMeshCommand(BasicCommand, ABC):
     def __init__(self, duration: int, interval: int):
         super(ChaosMeshCommand, self).__init__(duration, interval)
         self.k8s_yaml_path = None
+        self.init()
 
     def __str__(self):
         return f'[chaosmesh cmd] k8s_yaml_path: {self.k8s_yaml_path}'

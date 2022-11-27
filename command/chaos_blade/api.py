@@ -1,11 +1,9 @@
 import logging
 
 from command import ChaosBladeCommand
-from command.command_register import command_register
 from utils.k8s import get_one_container_id_with_host_ip
 
 
-@command_register('api-delay')
 class ApiDelay(ChaosBladeCommand):
 
     def __init__(self, service, classname, methodname, time, duration, interval, namespace):
@@ -50,7 +48,6 @@ class ApiDelay(ChaosBladeCommand):
                     --time {self.time}'
 
 
-@command_register('api-exception')
 class ApiException(ChaosBladeCommand):
 
     def __init__(self, service, classname, methodname, duration, interval, namespace):

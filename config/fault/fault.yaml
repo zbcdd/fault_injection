@@ -2,6 +2,9 @@ logs:
   dir: ./logs/run_info/
   format: "%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s - %(message)s"
 
+records:
+  dir: ./records/
+
 injection:
   metadata:
     st_time: 2022-11-27 00:00:00  # start time of all fault injection tasks

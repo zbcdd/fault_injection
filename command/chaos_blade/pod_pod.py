@@ -1,9 +1,7 @@
 from command import ChaosBladeCommand
-from command.command_register import command_register
 from utils.k8s import get_one_src_name_dest_ip
 
 
-@command_register('pod-pod-network-delay')
 class PodPodNetworkDelay(ChaosBladeCommand):
     def __init__(self, ip, src, dest, interface, time, duration, interval, namespace):
         """Chaosblade k8s pod-network delay
@@ -45,7 +43,6 @@ class PodPodNetworkDelay(ChaosBladeCommand):
                     --kubeconfig ~/.kube/config'
 
 
-@command_register('pod-pod-network-drop')
 class PodPodNetworkDrop(ChaosBladeCommand):
 
     def __init__(self, ip, src, dest, interface, duration, interval, namespace):

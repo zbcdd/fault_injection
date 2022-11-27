@@ -18,3 +18,11 @@ class CommandScheduler(object):
         self.scheduler.add_job(cmd.destroy, 'date', run_date=self.cur_time)
         logging.info(f'Add destroy job: [{self.cur_time.strftime(self.time_format)}] {cmd}')
         self.cur_time += timedelta(seconds=cmd.interval)
+
+    def start(self):
+        logging.info("[CommandScheduler] scheduler start.")
+        self.scheduler.start()
+
+    def shutdown(self):
+        logging.info("[CommandScheduler] scheduler shutdown.")
+        self.scheduler.shutdown()

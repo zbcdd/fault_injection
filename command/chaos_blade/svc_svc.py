@@ -1,9 +1,7 @@
 from command import ChaosBladeCommand
-from command.command_register import command_register
 from utils.k8s import get_all_src_names_dest_ips
 
 
-@command_register('svc-svc-network-delay')
 class SvcSvcNetworkDelay(ChaosBladeCommand):
     def __init__(self, ip, src, dest, interface, time, duration, interval, namespace):
         """Chaosblade k8s pod-network delay
@@ -45,7 +43,6 @@ class SvcSvcNetworkDelay(ChaosBladeCommand):
                     --kubeconfig ~/.kube/config"
 
 
-@command_register('svc-svc-network-drop')
 class SvcSvcNetworkDrop(ChaosBladeCommand):
 
     def __init__(self, ip, src, dest, interface, duration, interval, namespace):

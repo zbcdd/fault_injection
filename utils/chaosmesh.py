@@ -26,3 +26,7 @@ def check_all_chaosmesh_status(kinds: List[str]) -> None:
             raise Exception(f'Find {kind}, output: {output_str}')
         logging.info(f'Chaosmesh {kind} clean!')
     logging.info('Check chaosmesh status successfully! All clean.')
+
+
+def get_chaosmesh_record(ip: str, st_time: datetime, ed_time: datetime) -> List[Dict]:
+    TODO

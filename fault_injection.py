@@ -2,6 +2,8 @@ import click
 import kubernetes
 import logging
 import os
+import time
+from datetime import datetime, timedelta
 from command.command_builder import CommandBuilder
 from command.command_scheduler import CommandScheduler
 from utils.file import load_yaml, make_sure_dir_exists
@@ -35,6 +37,7 @@ def _fault_injection(k8s: str, fault: str) -> None:
     tt_namespace = fault_config['injection']['metadata']['namespace']
     chaosmesh_tmp_dir = fault_config['injection']['metadata']['chaosmesh']['tmp_dir']
     faults = fault_config['injection']['metadata']['faults']
+    k8s_master_ip = next(iter(k8s_config['k8s-master']))['ip']
     spec = fault_config['injection']['spec']
     command_builder = CommandBuilder()
     command_scheduler = CommandScheduler(st_time)
@@ -44,10 +47,27 @@ def _fault_injection(k8s: str, fault: str) -> None:
         fault_info['tt_namespace'] = tt_namespace
         fault_info['chaosmesh_tmp_dir'] = chaosmesh_tmp_dir
         fault_info['fault_name'] = fault_name
+        fault_info['k8s_master_ip'] = k8s_master_ip
         fault_targets = fault['targets']
         for target in fault_targets:
             cmd = command_builder.build(fault_info, target)
             command_scheduler.add_job(cmd)
+
+    # run
+    command_scheduler.start()
+    final_time = command_scheduler.cur_time + timedelta(minutes=10)
+    try:
+        while True:
+            now = datetime.now()
+            if now > final_time:
+                command_scheduler.shutdown()
+                break
+            time.sleep(10)
+    except(KeyboardInterrupt, SystemExit):
+        command_scheduler.shutdown()
+
+    # get record
+
 
 
 if __name__ == '__main__':

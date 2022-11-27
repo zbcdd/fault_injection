@@ -1,6 +1,7 @@
 import json
 import logging
-from .net import retry_session
+from datetime import datetime
+from net import retry_session
 from typing import Dict, List
 
 
@@ -30,3 +31,15 @@ def check_all_chaosblade_status(ips: List[str]) -> None:
     for ip in ips:
         check_chaosblade_status(ip)
     logging.info(f"Check chaosblade status successfully! All clean: {','.join(ips)}")
+
+
+def get_chaosblade_records(ip: str, st_time: datetime, ed_time: datetime) -> List[Dict]:
+    res = execute_cmd(ip, 'status --type c --asc', False)
+    records = res['result']
+
+    def time_filter(record: Dict) -> bool:
+        create_time_str = record['CreateTime'].split('.')[0]
+        create_time = datetime.strptime(create_time_str, '%Y-%m-%dT%H:%M:%S')
+        return st_time <= create_time <= ed_time
+
+    return [record for record in records if time_filter(record)]
