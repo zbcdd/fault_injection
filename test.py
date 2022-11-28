@@ -23,7 +23,6 @@
 #     ans = test_get_records()
 #     print(ans)
 import time
-from datetime import datetime
 import logging
 import subprocess
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -45,12 +44,10 @@ def recover_tsdb():
     if success_cnt != 1:
         logging.error(f'recover tsdb error: success cnt = {success_cnt}')
 
-def test_job():
-    print(datetime.now())
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler(timezone='Asia/Shanghai')
-    scheduler.add_job(test_job, 'cron', minute='7,17,27,37,47,57', second=25)
+    scheduler.add_job(recover_tsdb, 'cron', minute='7,17,27,37,47,57', second=25)
     scheduler.start()
     try:
         while True:

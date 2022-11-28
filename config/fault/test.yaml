@@ -8,22 +8,22 @@ records:
 
 injection:
   metadata:
-    st_time: 2022-11-28 00:50:00  # start time of all fault injection tasks
+    st_time: 2022-11-28 10:40:00  # start time of all fault injection tasks
     namespace: default  # train-ticket deployment namespace
     chaosmesh:
       tmp_dir: ./command/chaos_mesh/tmp/  # tmp dir to store the generated yaml files.
       kinds:
         - HTTPChaos  # chaosmesh crd kind, used to make sure lab environment clean.
     faults:  # must inject api faults first because of bugs in chaos-blade
-      - api-delay  # chaos-blade
-      - api-exception  # chaos-blade
-      - pod-http-request-delay  # chaos-mesh
-      - pod-http-request-abort  # chaos-mesh
-      - svc-http-request-delay  # chaos-mesh
-      - svc-http-request-abort  # chaos-mesh
-      - pod-pod-network-delay  # chaos-blade
-      - pod-pod-network-drop  # chaos-blade
-      - svc-svc-network-delay  # chaos-blade
+#      - api-delay  # chaos-blade
+#      - api-exception  # chaos-blade
+#      - pod-http-request-delay  # chaos-mesh
+#      - pod-http-request-abort  # chaos-mesh
+#      - svc-http-request-delay  # chaos-mesh
+#      - svc-http-request-abort  # chaos-mesh
+#      - pod-pod-network-delay  # chaos-blade
+#      - pod-pod-network-drop  # chaos-blade
+#      - svc-svc-network-delay  # chaos-blade
       - svc-svc-network-drop  # chaos-blade
 #      - node-network-delay  # chaos-blade
   spec:
@@ -174,8 +174,8 @@ injection:
 #        - ts-preserve-service ts-basic-service
     svc-svc-network-drop:
       info:
-        duration: 30  # (s) duration of each fault
-        interval: 30  # (s) interval between two adjacent faults
+        duration: 300  # (s) duration of each fault
+        interval: 300  # (s) interval between two adjacent faults
         interface: eth0
       targets:  # src dest
         - ts-travel2-service ts-basic-service

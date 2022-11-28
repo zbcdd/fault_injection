@@ -128,12 +128,15 @@ injection:
         - ts-basic-service ts-train-service
         - ts-preserve-service ts-order-service
         - ts-execute-service ts-order-other-service
-        - ts-order-other-service ts-station-service
-        - ts-preserve-service ts-station-service
+        - ts-admin-basic-info-service ts-station-service
+        - ts-rebook-service ts-travel-service
+        - ts-preserve-other-service ts-basic-service
         - ts-preserve-service ts-contacts-service
         - ts-cancel-service ts-order-other-service
         - ts-admin-travel-service ts-route-service
         - ts-admin-user-service ts-user-service
+        - ts-preserve-other-service ts-security-service
+        - ts-preserve-other-service ts-travel2-service
     pod-pod-network-drop:
       info:
         duration: 300  # (s) duration of each fault
@@ -143,15 +146,18 @@ injection:
         - ts-preserve-service ts-basic-service
         - ts-seat-service ts-order-other-service
         - ts-preserve-service ts-assurance-service
-        - ts-cancel-service ts-notification-service
+        - ts-rebook-service ts-inside-payment-service
         - ts-travel-service ts-route-service
         - ts-admin-order-service ts-order-other-service
-        - ts-admin-travel-service ts-station-service
+        - ts-rebook-service ts-route-service
         - ts-basic-service ts-price-service
+        - ts-preserve-other-service ts-seat-service
         - ts-rebook-service ts-order-service
         - ts-admin-route-service ts-route-service
-        - ts-travel-service ts-train-service
+        - ts-rebook-service ts-train-service
         - ts-admin-travel-service ts-train-service
+        - ts-preserve-other-service ts-security-service
+        - ts-preserve-other-service ts-travel2-service
     svc-svc-network-delay:
       info:
         duration: 300  # (s) duration of each fault
@@ -169,8 +175,11 @@ injection:
         - ts-admin-travel-service ts-travel2-service
         - ts-cancel-service ts-user-service
         - ts-cancel-service ts-order-service
-        - ts-travel2-service ts-train-service
+        - ts-preserve-other-service ts-order-other-service
+        - ts-rebook-service ts-order-service
         - ts-cancel-service ts-inside-payment-service
+        - ts-preserve-other-service ts-security-service
+        - ts-preserve-other-service ts-travel2-service
     svc-svc-network-drop:
       info:
         duration: 300  # (s) duration of each fault
@@ -183,10 +192,12 @@ injection:
         - ts-seat-service ts-config-service
         - ts-preserve-service ts-consign-service
         - ts-travel-service ts-seat-service
-        - ts-travel2-service ts-route-service
-        - ts-order-service ts-station-service
+        - ts-rebook-service ts-travel2-service
+        - ts-travel-plan-service ts-seat-service
         - ts-execute-service ts-order-service
         - ts-user-service ts-auth-service
+        - ts-preserve-other-service ts-assurance-service
         - ts-preserve-service ts-travel-service
         - ts-rebook-service ts-order-other-service
         - ts-travel-service ts-basic-service
+        - ts-preserve-other-service ts-contacts-service
