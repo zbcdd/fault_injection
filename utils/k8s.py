@@ -35,3 +35,9 @@ def get_all_src_names_dest_ips(namespace: str, src: str, dest: str) -> Tuple[Lis
         if pod.metadata.name.startswith(dest):
             dest_pod_ips.append(pod.status.pod_ip)
     return src_pod_names, dest_pod_ips
+
+
+def get_pod_names(namespace: str, pod_prefix: str) -> List[str]:
+    pods = client.CoreV1Api().list_namespaced_pod(namespace)
+    res = [pod.metadata.name for pod in pods.items if pod.metadata.name.startswith(pod_prefix)]
+    return res

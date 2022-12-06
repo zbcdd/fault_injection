@@ -1,56 +1,26 @@
-# import pandas as pd
-# from utils.records import get_records
-# from datetime import datetime
-#
-#
-# def test_get_records() -> pd.DataFrame:
-#     st_time = datetime.strptime('2022-11-28 00:00:00', '%Y-%m-%d %H:%M:%S')
-#     ed_time = datetime.strptime('2022-11-28 00:20:00', '%Y-%m-%d %H:%M:%S')
-#     ans = get_records(['10.176.122.154',
-#                        '10.176.122.151',
-#                        '10.176.122.152',
-#                        '10.176.122.153',
-#                        '10.176.122.161',
-#                        '10.176.122.162'],
-#                       'http://10.176.122.154:30331/api/events',
-#                       './command/chaos_mesh/tmp',
-#                       st_time,
-#                       ed_time)
-#     return ans
-#
-#
-# if __name__ == '__main__':
-#     ans = test_get_records()
-#     print(ans)
-import time
-import logging
-import subprocess
-from apscheduler.schedulers.background import BackgroundScheduler
-
-
-def recover_tsdb():
-    logging.basicConfig(filename='./run_info.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    success_cnt = 0
-    for i in range(3):
-        cp_cmd = f'kubectl cp ./ts.sql tsdb-mysql-{i}:/home/ts.sql -c mysql'
-        exec_cmd = f'kubectl exec tsdb-mysql-{i} -c mysql -- /bin/bash -c "mysql < /home/ts.sql"'
-        cp_status, cp_output = subprocess.getstatusoutput(cp_cmd)
-        if cp_status != 0:
-            logging.error(f'copy error: status: {cp_status}, output: {cp_output}')
-        exec_status, exec_output = subprocess.getstatusoutput(exec_cmd)
-        if exec_status == 0:
-            logging.info(f'Recover success: tsdb-mysql-{i}, status: {exec_status}, output: {exec_output}')
-            success_cnt += 1
-    if success_cnt != 1:
-        logging.error(f'recover tsdb error: success cnt = {success_cnt}')
+import os
+from datetime import datetime
+from utils.file import make_sure_dir_exists
+from utils.records import get_records
 
 
 if __name__ == '__main__':
-    scheduler = BackgroundScheduler(timezone='Asia/Shanghai')
-    scheduler.add_job(recover_tsdb, 'cron', minute='7,17,27,37,47,57', second=25)
-    scheduler.start()
-    try:
-        while True:
-            time.sleep(10)
-    except(KeyboardInterrupt, SystemExit):
-        scheduler.shutdown()
+    time_format = '%Y-%m-%d %H:%M:%S'
+    st_time = datetime.strptime('2022-12-06 00:05:00', time_format)
+    final_time = datetime.strptime('2022-12-06 08:05:00', time_format)
+    st_time_str = str(st_time).replace(' ', 'T')
+    final_time_str = str(final_time).replace(' ', 'T')
+    record_path = os.path.join('./records/', f'{st_time_str}_{final_time_str}.csv')
+    make_sure_dir_exists(record_path)
+    chaosmesh_url = 'http://10.176.122.154:30331/api/events'
+    ips = [
+        '10.176.122.154',
+        '10.176.122.151',
+        '10.176.122.152',
+        '10.176.122.153',
+        '10.176.122.161',
+        '10.176.122.162'
+    ]
+    df = get_records(ips, chaosmesh_url, './command/chaos_mesh/tmp/', st_time, final_time)
+    df.to_csv(record_path, index=False)
+    print(f'records saved at {record_path}, st_time: {st_time}, final_time: {final_time}')

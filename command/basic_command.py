@@ -45,7 +45,10 @@ class ChaosBladeCommand(BasicCommand, ABC):
 
     def destroy(self):
         if self.res and 'result' in self.res:
-            chaosblade_cmd(self.ip, f"destroy {self.res['result']}")
+            for _ in range(2):  # if failed, retry (2 - 1) times
+                destroy_res = chaosblade_cmd(self.ip, f"destroy {self.res['result']}")
+                if 'result' in destroy_res and 'code' in destroy_res and destroy_res['code'] == 200:
+                    break
         else:
             logging.error(f'Chaosblade cannot destroy command because of missing result uid.')
 

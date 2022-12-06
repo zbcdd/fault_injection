@@ -1,0 +1,104 @@
+logs:
+  dir: ./logs/run_info/
+  format: "%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s - %(message)s"
+
+records:
+  dir: ./records/
+  chaosmesh_records: http://10.176.122.154:30331/api/events  # chaosmesh events query url
+
+injection:
+  metadata:
+    st_time: 2022-12-06 13:00:00  # start time of all fault injection tasks
+    namespace: default  # train-ticket deployment namespace
+    chaosmesh:
+      tmp_dir: ./command/chaos_mesh/tmp/  # tmp dir to store the generated yaml files.
+      kinds:
+        - HTTPChaos
+    faults:  # must inject api faults first because of bugs in chaos-blade
+      # - pod-mysql-delay  # chaos-blade
+      # - jvm-cpu-full  # chaos-blade
+      # - pod-cpu-full  # chaos-blade
+      - svc-cpu-full  # chaos-blade
+  spec:
+    pod-mysql-delay:
+      info:
+        duration: 300  # (s) duration of each fault
+        interval: 300  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+      targets: # pod_prefix
+        - ts-order-service
+        - ts-contacts-service
+        - ts-order-other-service
+        - ts-route-service
+        - ts-train-food-service
+        - ts-travel2-service
+        - ts-consign-service
+        - ts-inside-payment-service
+        - ts-station-service
+        - ts-travel-service
+        - ts-assurance-service
+        - ts-config-service
+        - ts-price-service
+        - ts-train-service
+        - ts-user-service
+        - ts-auth-service
+        - ts-consign-price-service
+        - ts-security-service
+    jvm-cpu-full:
+      info:
+        duration: 300  # (s) duration of each fault
+        interval: 300  # (s) interval between two adjacent faults
+      targets:
+        - ts-order-service
+        - ts-admin-travel-service
+        - ts-basic-service
+        - ts-consign-service
+        - ts-inside-payment-service
+        - ts-preserve-other-service
+        - ts-route-plan-service
+        - ts-station-service
+        - ts-travel-service
+        - ts-admin-order-service
+        - ts-assurance-service
+        - ts-config-service
+        - ts-execute-service
+        - ts-rebook-service
+        - ts-security-service
+        - ts-travel-plan-service
+        - ts-verification-code-service
+    pod-cpu-full:
+      info:
+        duration: 300  # (s) duration of each fault
+        interval: 300  # (s) interval between two adjacent faults
+      targets:
+        - ts-order-service
+        - ts-admin-order-service
+        - ts-assurance-service
+        - ts-config-service
+        - ts-execute-service
+        - ts-price-service
+        - ts-seat-service
+        - ts-train-service
+        - ts-user-service
+        - ts-admin-travel-service
+        - ts-basic-service
+        - ts-consign-service
+    svc-cpu-full:
+      info:
+        duration: 300  # (s) duration of each fault
+        interval: 300  # (s) interval between two adjacent faults
+      targets:
+        - ts-order-service
+        - ts-admin-route-service
+        - ts-auth-service
+        - ts-consign-price-service
+        - ts-food-service
+        - ts-payment-service
+        - ts-rebook-service
+        - ts-security-service
+        - ts-travel-plan-service
+        - ts-verification-code-service
+        - ts-inside-payment-service
+        - ts-preserve-other-service
+        - ts-route-plan-service
+        - ts-station-service

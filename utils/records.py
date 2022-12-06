@@ -36,8 +36,11 @@ def get_info_from_chaosblade_record(record: Dict) -> Dict:
         res['target'] = target
 
     if command == 'k8s':
-        src_pod_names = flag_dict['--names'].strip().split(',')
-        dest_pod_ips = flag_dict['--destination-ip'].strip().split(',')
+        if '--names' in flag_dict:
+            src_pod_names = flag_dict['--names'].strip().split(',')
+        if '--destination-ip' in flag_dict:
+            dest_pod_ips = flag_dict['--destination-ip'].strip().split(',')
+
         if sub_command == 'pod-network delay':
             if len(src_pod_names) == 1 and len(dest_pod_ips) == 1:
                 set_res('pod-pod-network-delay', f'{src_pod_names[0]} {dest_pod_ips[0]}')
@@ -48,15 +51,27 @@ def get_info_from_chaosblade_record(record: Dict) -> Dict:
                 set_res('pod-pod-network-drop', f'{src_pod_names[0]} {dest_pod_ips[0]}')
             if len(src_pod_names) > 1 and len(dest_pod_ips) > 1:
                 set_res('svc-svc-network-drop', f"{','.join(src_pod_names)} {','.join(dest_pod_ips)}")
+        if sub_command == 'pod-cpu fullload':
+            if len(src_pod_names) == 1:
+                set_res('pod-cpu-full', src_pod_names[0])
+            if len(src_pod_names) > 1:
+                set_res('svc-cpu-full', f"{','.join(src_pod_names)}")
 
     if command == 'cri':
         container_id = flag_dict['--container-id']
-        classname = flag_dict['--classname']
-        methodname = flag_dict['--methodname']
+        if '--classname' in flag_dict:
+            classname = flag_dict['--classname']
+        if '--methodname' in flag_dict:
+            methodname = flag_dict['--methodname']
+
         if sub_command == 'jvm delay':
             set_res('api-delay', f'{container_id} {classname} {methodname}')
         if sub_command == 'jvm throwCustomException':
             set_res('api-exception', f'{container_id} {classname} {methodname}')
+        if sub_command == 'jvm cpufullload':
+            set_res('jvm-cpu-full', container_id)
+        if sub_command == 'mysql delay':
+            set_res('pod-mysql-delay', container_id)
 
     if not res['fault_type']:
         logging.error(f"Cannot find fault type for record: {record}")
