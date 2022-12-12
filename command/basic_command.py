@@ -45,7 +45,7 @@ class ChaosBladeCommand(BasicCommand, ABC):
 
     def destroy(self):
         if self.res and 'result' in self.res:
-            for _ in range(2):  # if failed, retry (2 - 1) times
+            for _ in range(3):  # if failed, retry (2 - 1) times
                 destroy_res = chaosblade_cmd(self.ip, f"destroy {self.res['result']}")
                 if 'result' in destroy_res and 'code' in destroy_res and destroy_res['code'] == 200:
                     break
