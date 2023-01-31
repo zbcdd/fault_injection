@@ -8,6 +8,7 @@ class PodCpuFull(ChaosBladeCommand):
     def __init__(self, ip, pod_prefix, duration, interval, namespace):
 
         super(PodCpuFull, self).__init__(duration, interval)
+        self.fault_type = 'pod-cpu-full'
         self.ip = ip
         self.pod_prefix = pod_prefix
         self.namespace = namespace
@@ -25,6 +26,7 @@ class PodCpuFull(ChaosBladeCommand):
                    f'--namespace {self.namespace} ' \
                    f'--names {pod} ' \
                    f'--kubeconfig ~/.kube/config'
+        self.root_cause = pod
 
 
 class PodMysqlDelay(ChaosBladeCommand):
@@ -32,6 +34,7 @@ class PodMysqlDelay(ChaosBladeCommand):
     def __init__(self, pod_prefix, time, duration, interval, namespace):
 
         super(PodMysqlDelay, self).__init__(duration, interval)
+        self.fault_type = 'pod-mysql-delay'
         self.pod_prefix = pod_prefix
         self.time = time
         self.namespace = namespace
@@ -40,7 +43,7 @@ class PodMysqlDelay(ChaosBladeCommand):
         return f'[pod-mysql-delay] pod_prefix: {self.pod_prefix} namespace: {self.namespace} time: {self.time}'
 
     def init(self):
-        container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.pod_prefix)
+        pod_name, container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.pod_prefix)
         if not container_id:
             logging.error(f'Cannot find pod which name start with {self.pod_prefix}')
             raise Exception(f'Cannot find pod which name start with {self.pod_prefix}')
@@ -51,3 +54,4 @@ class PodMysqlDelay(ChaosBladeCommand):
                    f'--time {self.time} ' \
                    f'--pid 1 ' \
                    f'--chaosblade-release ~/chaosblade/chaosblade-1.5.0-linux-amd64.tar.gz'
+        self.root_cause = ' '.join(pod_name, 'mysql-all')

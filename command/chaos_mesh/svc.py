@@ -18,6 +18,7 @@ class SvcHttpRequestDelay(ChaosMeshCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(SvcHttpRequestDelay, self).__init__(duration, interval)
+        self.fault_type = 'svc-http-request-delay'
         self.tmp_dir = tmp_dir
         self.app = app
         self.port = port
@@ -59,6 +60,7 @@ class SvcHttpRequestAbort(ChaosMeshCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(SvcHttpRequestAbort, self).__init__(duration, interval)
+        self.fault_type = 'svc-http-request-abort'
         self.tmp_dir = tmp_dir
         self.app = app
         self.port = port

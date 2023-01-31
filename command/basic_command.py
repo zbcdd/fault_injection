@@ -2,6 +2,7 @@ import logging
 from abc import ABCMeta, abstractmethod, ABC
 from utils.chaosblade import execute_cmd as chaosblade_cmd
 from utils.chaosmesh import execute_cmd as chaosmesh_cmd
+from datetime import datetime
 
 
 class BasicCommand(metaclass=ABCMeta):
@@ -42,12 +43,20 @@ class ChaosBladeCommand(BasicCommand, ABC):
         assert self.ip is not None
         assert self.cmd is not None
         self.res = chaosblade_cmd(self.ip, self.cmd)
+        self.st_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 
     def destroy(self):
         if self.res and 'result' in self.res:
             for _ in range(3):  # if failed, retry (2 - 1) times
+                self.ed_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
                 destroy_res = chaosblade_cmd(self.ip, f"destroy {self.res['result']}")
                 if 'result' in destroy_res and 'code' in destroy_res and destroy_res['code'] == 200:
+                    self.filename = f'{self.st_time}_{self.ed_time}'
+                    self.record_data['st_time'].append(self.st_time)
+                    self.record_data['ed_time'].append(self.ed_time)
+                    self.record_data['fault_type'].append(self.fault_type)
+                    self.record_data['root_cause'].append(self.root_cause)
+                    self.record_data['filename'].append(self.filename)
                     break
         else:
             logging.error(f'Chaosblade cannot destroy command because of missing result uid.')
@@ -65,7 +74,9 @@ class ChaosMeshCommand(BasicCommand, ABC):
     def execute(self):
         assert self.k8s_yaml_path is not None
         chaosmesh_cmd(f'kubectl apply -f {self.k8s_yaml_path}')
+        self.st_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
 
     def destroy(self):
         assert self.k8s_yaml_path is not None
+        self.ed_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         chaosmesh_cmd(f'kubectl delete -f {self.k8s_yaml_path}')

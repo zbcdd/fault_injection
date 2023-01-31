@@ -95,23 +95,23 @@ def get_records(chaosblade_ips: List[str], chaosmesh_url: str, chaosmesh_tmp_dir
         'cmd': []
     }
 
-    chaosblade_records = get_all_ips_chaosblade_records(chaosblade_ips, st_time, ed_time)
-    for ip, records in chaosblade_records.items():
-        for record in records:
-            if record['Status'] != 'Destroyed':
-                logging.error(f'Find chaosblade record which status is not Destroyed: {record}')
-                raise Exception(f'Find chaosblade record which status is not Destroyed: {record}')
-            record_info = get_info_from_chaosblade_record(record)
-            data['uid'].append(record['Uid'])
-            data['tool'].append('chaosblade')
-            data['ip'].append(ip)
-            data['fault_type'].append(record_info['fault_type'])
-            data['target'].append(record_info['target'])
-            data['status'].append(record['Status'])
-            data['st_time'].append(record['CreateTime'])
-            data['ed_time'].append(record['UpdateTime'])
-            data['filename'].append(f"{record['CreateTime']}_{record['UpdateTime']}")
-            data['cmd'].append(record_info['cmd'])
+    # chaosblade_records = get_all_ips_chaosblade_records(chaosblade_ips, st_time, ed_time)
+    # for ip, records in chaosblade_records.items():
+    #     for record in records:
+    #         if record['Status'] != 'Destroyed':
+    #             logging.error(f'Find chaosblade record which status is not Destroyed: {record}')
+    #             raise Exception(f'Find chaosblade record which status is not Destroyed: {record}')
+    #         record_info = get_info_from_chaosblade_record(record)
+    #         data['uid'].append(record['Uid'])
+    #         data['tool'].append('chaosblade')
+    #         data['ip'].append(ip)
+    #         data['fault_type'].append(record_info['fault_type'])
+    #         data['target'].append(record_info['target'])
+    #         data['status'].append(record['Status'])
+    #         data['st_time'].append(record['CreateTime'])
+    #         data['ed_time'].append(record['UpdateTime'])
+    #         data['filename'].append(f"{record['CreateTime']}_{record['UpdateTime']}")
+    #         data['cmd'].append(record_info['cmd'])
 
     chaosmesh_records = get_chaosmesh_records(chaosmesh_url, st_time, ed_time)
     chaosmesh_dict = {}

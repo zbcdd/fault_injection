@@ -25,6 +25,7 @@ class PodPodNetworkDelay(ChaosBladeCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(PodPodNetworkDelay, self).__init__(duration, interval)
+        self.fault_type = 'pod-pod-network-delay'
         self.ip = ip
         self.src = src
         self.dest = dest
@@ -37,7 +38,7 @@ class PodPodNetworkDelay(ChaosBladeCommand):
                f'interface: {self.interface} time: {self.time} namespace: {self.namespace}'
 
     def init(self):
-        src_pod_name, dest_pod_ip = get_one_src_name_dest_ip(self.namespace, self.src, self.dest)
+        src_pod_name, dest_pod_name, dest_pod_ip = get_one_src_name_dest_ip(self.namespace, self.src, self.dest)
         self.cmd = f'create k8s pod-network delay ' \
                    f'--namespace {self.namespace} ' \
                    f'--names {src_pod_name} ' \
@@ -45,6 +46,7 @@ class PodPodNetworkDelay(ChaosBladeCommand):
                    f'--destination-ip {dest_pod_ip} ' \
                    f'--time {self.time} ' \
                    f'--kubeconfig ~/.kube/config'
+        self.root_cause = ' '.join(src_pod_name, dest_pod_name)
 
 
 class PodPodNetworkDrop(ChaosBladeCommand):
@@ -71,6 +73,7 @@ class PodPodNetworkDrop(ChaosBladeCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(PodPodNetworkDrop, self).__init__(duration, interval)
+        self.fault_type = 'pod-pod-network-drop'
         self.ip = ip
         self.src = src
         self.dest = dest
@@ -82,7 +85,7 @@ class PodPodNetworkDrop(ChaosBladeCommand):
                f'interface: {self.interface} namespace: {self.namespace}'
 
     def init(self):
-        src_pod_name, dest_pod_ip = get_one_src_name_dest_ip(self.namespace, self.src, self.dest)
+        src_pod_name, dest_pod_name, dest_pod_ip = get_one_src_name_dest_ip(self.namespace, self.src, self.dest)
         self.cmd = f'create k8s container-network drop ' \
                    f'--namespace {self.namespace} ' \
                    f'--names {src_pod_name} ' \
@@ -91,3 +94,4 @@ class PodPodNetworkDrop(ChaosBladeCommand):
                    f'--network-traffic out ' \
                    f'--use-sidecar-container-network ' \
                    f'--kubeconfig ~/.kube/config'
+        self.root_cause = ' '.join(src_pod_name, dest_pod_name)

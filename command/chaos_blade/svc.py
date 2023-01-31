@@ -8,6 +8,7 @@ class SvcCpuFull(ChaosBladeCommand):
     def __init__(self, ip, pod_prefix, duration, interval, namespace):
 
         super(SvcCpuFull, self).__init__(duration, interval)
+        self.fault_type = 'svc-cpu-full'
         self.ip = ip
         self.pod_prefix = pod_prefix
         self.namespace = namespace
@@ -25,3 +26,4 @@ class SvcCpuFull(ChaosBladeCommand):
                    f'--namespace {self.namespace} ' \
                    f'--names {pods} ' \
                    f'--kubeconfig ~/.kube/config'
+        self.root_cause = f'{self.pod_prefix}({pods})'

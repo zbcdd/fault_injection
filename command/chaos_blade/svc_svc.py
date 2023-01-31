@@ -25,6 +25,7 @@ class SvcSvcNetworkDelay(ChaosBladeCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(SvcSvcNetworkDelay, self).__init__(duration, interval)
+        self.fault_type = 'svc-svc-network-delay'
         self.ip = ip
         self.src = src
         self.dest = dest
@@ -37,7 +38,7 @@ class SvcSvcNetworkDelay(ChaosBladeCommand):
                f'interface: {self.interface} time: {self.time} namespace: {self.namespace}'
 
     def init(self):
-        src_pod_names, dest_pod_ips = get_all_src_names_dest_ips(self.namespace, self.src, self.dest)
+        src_pod_names, dest_pod_names, dest_pod_ips = get_all_src_names_dest_ips(self.namespace, self.src, self.dest)
         self.cmd = f"create k8s pod-network delay " \
                    f"--namespace {self.namespace} " \
                    f"--names {','.join(src_pod_names)} " \
@@ -45,6 +46,7 @@ class SvcSvcNetworkDelay(ChaosBladeCommand):
                    f"--destination-ip {','.join(dest_pod_ips)} " \
                    f"--time {self.time} " \
                    f"--kubeconfig ~/.kube/config"
+        self.root_cause = f"{self.src}({','.join(src_pod_names)}) {self.dest}({','.join(dest_pod_names)})"
 
 
 class SvcSvcNetworkDrop(ChaosBladeCommand):
@@ -71,6 +73,7 @@ class SvcSvcNetworkDrop(ChaosBladeCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(SvcSvcNetworkDrop, self).__init__(duration, interval)
+        self.fault_type = 'svc-svc-network-drop'
         self.ip = ip
         self.src = src
         self.dest = dest
@@ -82,7 +85,7 @@ class SvcSvcNetworkDrop(ChaosBladeCommand):
                f'interface: {self.interface} namespace: {self.namespace}'
 
     def init(self):
-        src_pod_names, dest_pod_ips = get_all_src_names_dest_ips(self.namespace, self.src, self.dest)
+        src_pod_names, dest_pod_names, dest_pod_ips = get_all_src_names_dest_ips(self.namespace, self.src, self.dest)
         self.cmd = f"create k8s container-network drop " \
                    f"--namespace {self.namespace} " \
                    f"--names {','.join(src_pod_names)} " \
@@ -91,3 +94,4 @@ class SvcSvcNetworkDrop(ChaosBladeCommand):
                    f"--network-traffic out " \
                    f"--use-sidecar-container-network " \
                    f"--kubeconfig ~/.kube/config"
+        self.root_cause = f"{self.src}({','.join(src_pod_names)}) {self.dest}({','.join(dest_pod_names)})"

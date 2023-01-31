@@ -27,6 +27,7 @@ class ApiDelay(ChaosBladeCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(ApiDelay, self).__init__(duration, interval)
+        self.fault_type = 'api-delay'
         self.service = service
         self.classname = classname
         self.methodname = methodname
@@ -38,7 +39,7 @@ class ApiDelay(ChaosBladeCommand):
                f'time: {self.time} namespace: {self.namespace}'
 
     def init(self):
-        container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.service)
+        pod_name, container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.service)
         if not container_id or not host_ip:
             logging.error(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
             raise Exception(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
@@ -50,6 +51,7 @@ class ApiDelay(ChaosBladeCommand):
                    f'--container-id {container_id} ' \
                    f'--pid 1 ' \
                    f'--time {self.time}'
+        self.root_cause = ' '.join(pod_name, self.classname, self.methodname)
 
 
 class ApiException(ChaosBladeCommand):
@@ -74,6 +76,7 @@ class ApiException(ChaosBladeCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(ApiException, self).__init__(duration, interval)
+        self.fault_type = 'api-exception'
         self.service = service
         self.classname = classname
         self.methodname = methodname
@@ -84,7 +87,7 @@ class ApiException(ChaosBladeCommand):
                f'methodname: {self.methodname} namespace: {self.namespace}'
 
     def init(self):
-        container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.service)
+        pod_name, container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.service)
         if not container_id or not host_ip:
             logging.error(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
             raise Exception(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
@@ -96,3 +99,4 @@ class ApiException(ChaosBladeCommand):
                    f'--container-id {container_id} ' \
                    f'--pid 1 ' \
                    f'--exception java.lang.Exception'
+        self.root_cause = ' '.join(pod_name, self.classname, self.methodname)

@@ -3,6 +3,7 @@ import kubernetes
 import logging
 import os
 import time
+import pandas as pd
 from datetime import datetime, timedelta
 from command.command_builder import CommandBuilder
 from command.command_scheduler import CommandScheduler
@@ -42,6 +43,13 @@ def _fault_injection(k8s: str, fault: str) -> None:
     spec = fault_config['injection']['spec']
     command_builder = CommandBuilder()
     command_scheduler = CommandScheduler(st_time)
+    record_data = {
+        'st_time': [],
+        'ed_time': [],
+        'fault_type': [],
+        'root_cause': [],
+        'filename': []
+    }
     for fault_name in faults:
         fault = spec[fault_name]
         fault_info = fault['info']
@@ -52,6 +60,7 @@ def _fault_injection(k8s: str, fault: str) -> None:
         fault_targets = fault['targets']
         for target in fault_targets:
             cmd = command_builder.build(fault_info, target)
+            cmd.record_data = record_data
             command_scheduler.add_job(cmd)
 
     # run
@@ -64,17 +73,28 @@ def _fault_injection(k8s: str, fault: str) -> None:
                 command_scheduler.shutdown()
                 break
             time.sleep(10)
-    except(KeyboardInterrupt, SystemExit):
+    except (KeyboardInterrupt, SystemExit):
         command_scheduler.shutdown()
 
-    # get record
+    # check status
+    check_all_chaosblade_status(ips)
+    check_all_chaosmesh_status(fault_config['injection']['metadata']['chaosmesh']['kinds'])
+    logging.info(f'Lab environment clean!')
+
+    # get record (chaosmesh only)
     st_time_str = str(st_time).replace(' ', 'T')
     final_time_str = str(final_time).replace(' ', 'T')
     record_path = os.path.join(fault_config['records']['dir'], f'{st_time_str}_{final_time_str}.csv')
     make_sure_dir_exists(record_path)
     chaosmesh_url = fault_config['records']['chaosmesh_records']
     df = get_records(ips, chaosmesh_url, chaosmesh_tmp_dir, st_time, final_time)
-    df.to_csv(record_path, index=False)
+    cols = ['st_time', 'ed_time', 'fault_type', 'filename']
+    for c in cols:
+        record_data[c] += list(df[c])
+    record_data['root_cause'] += list(df['target'])
+    record_df = pd.DataFrame(record_data)
+    record_df = record_df.sort_values('st_time')
+    record_df.to_csv(record_path, index=False)
     logging.info(f'records saved at {record_path}, st_time: {st_time}, final_time: {final_time}')
 
 

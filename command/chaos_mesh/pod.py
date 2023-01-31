@@ -18,6 +18,7 @@ class PodHttpRequestDelay(ChaosMeshCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(PodHttpRequestDelay, self).__init__(duration, interval)
+        self.fault_type = 'pod-http-request-delay'
         self.tmp_dir = tmp_dir
         self.app = app
         self.port = port
@@ -59,6 +60,7 @@ class PodHttpRequestAbort(ChaosMeshCommand):
         :param namespace: k8s deployment namespace. e.g., default
         """
         super(PodHttpRequestAbort, self).__init__(duration, interval)
+        self.fault_type = 'pod-http-request-abort'
         self.tmp_dir = tmp_dir
         self.app = app
         self.port = port
