@@ -1,0 +1,10 @@
+st_time,ed_time,fault_type,root_cause,filename
+2023-01-31T14:31:04,2023-01-31T14:33:00,api-delay,ts-travel-service-86bc99b94f-45t9x travel.controller.TravelController queryInfo,2023-01-31T14:31:04_2023-01-31T14:33:00
+2023-01-31T14:34:18,2023-01-31T14:35:30,pod-mysql-delay,ts-order-other-service-5b5666cd96-f57k9 mysql-all,2023-01-31T14:34:18_2023-01-31T14:35:30
+2023-01-31T14:36:03,2023-01-31T14:38:00,jvm-cpu-full,ts-travel-service-86bc99b94f-45t9x,2023-01-31T14:36:03_2023-01-31T14:38:00
+2023-01-31T14:38:30,2023-01-31T14:40:30,pod-http-request-delay,ts-travel2-service-686c895647-wq7jt,2023-01-31T14:38:30_2023-01-31T14:40:30
+2023-01-31T14:41:01,2023-01-31T14:43:00,svc-http-request-delay,"ts-rebook-service-7d69b45f79-gbbgg,ts-rebook-service-7d69b45f79-wqjcw",2023-01-31T14:41:01_2023-01-31T14:43:00
+2023-01-31T14:43:35,2023-01-31T14:45:30,pod-pod-network-delay,ts-basic-service-dc47b9966-bxltv ts-route-service-cd8474f97-qdshk,2023-01-31T14:43:35_2023-01-31T14:45:30
+2023-01-31T14:46:04,2023-01-31T14:48:00,svc-svc-network-delay,"ts-cancel-service(ts-cancel-service-646644ddf4-7r5bw,ts-cancel-service-646644ddf4-v6jml) ts-inside-payment-service(ts-inside-payment-service-59c4bc8bb7-2cj24,ts-inside-payment-service-59c4bc8bb7-7k577)",2023-01-31T14:46:04_2023-01-31T14:48:00
+2023-01-31T14:48:34,2023-01-31T14:50:51,pod-cpu-full,ts-travel-service-86bc99b94f-45t9x,2023-01-31T14:48:34_2023-01-31T14:50:51
+2023-01-31T14:51:05,2023-01-31T14:53:20,svc-cpu-full,"ts-payment-service(ts-payment-service-5fb5487dd5-js7r9,ts-payment-service-5fb5487dd5-mdrbq)",2023-01-31T14:51:05_2023-01-31T14:53:20

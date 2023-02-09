@@ -46,7 +46,7 @@ class PodPodNetworkDelay(ChaosBladeCommand):
                    f'--destination-ip {dest_pod_ip} ' \
                    f'--time {self.time} ' \
                    f'--kubeconfig ~/.kube/config'
-        self.root_cause = ' '.join(src_pod_name, dest_pod_name)
+        self.root_cause = ' '.join([src_pod_name, dest_pod_name])
 
 
 class PodPodNetworkDrop(ChaosBladeCommand):
@@ -94,4 +94,4 @@ class PodPodNetworkDrop(ChaosBladeCommand):
                    f'--network-traffic out ' \
                    f'--use-sidecar-container-network ' \
                    f'--kubeconfig ~/.kube/config'
-        self.root_cause = ' '.join(src_pod_name, dest_pod_name)
+        self.root_cause = ' '.join([src_pod_name, dest_pod_name])

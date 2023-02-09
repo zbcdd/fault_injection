@@ -54,4 +54,4 @@ class PodMysqlDelay(ChaosBladeCommand):
                    f'--time {self.time} ' \
                    f'--pid 1 ' \
                    f'--chaosblade-release ~/chaosblade/chaosblade-1.5.0-linux-amd64.tar.gz'
-        self.root_cause = ' '.join(pod_name, 'mysql-all')
+        self.root_cause = ' '.join([pod_name, 'mysql-all'])

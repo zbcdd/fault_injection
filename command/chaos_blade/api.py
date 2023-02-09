@@ -51,7 +51,7 @@ class ApiDelay(ChaosBladeCommand):
                    f'--container-id {container_id} ' \
                    f'--pid 1 ' \
                    f'--time {self.time}'
-        self.root_cause = ' '.join(pod_name, self.classname, self.methodname)
+        self.root_cause = ' '.join([pod_name, self.classname, self.methodname])
 
 
 class ApiException(ChaosBladeCommand):
@@ -99,4 +99,4 @@ class ApiException(ChaosBladeCommand):
                    f'--container-id {container_id} ' \
                    f'--pid 1 ' \
                    f'--exception java.lang.Exception'
-        self.root_cause = ' '.join(pod_name, self.classname, self.methodname)
+        self.root_cause = ' '.join([pod_name, self.classname, self.methodname])
