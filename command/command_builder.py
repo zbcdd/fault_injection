@@ -4,7 +4,7 @@ from .basic_command import BasicCommand
 from .chaos_blade.api import ApiDelay, ApiException
 from .chaos_blade.pod_pod import PodPodNetworkDelay, PodPodNetworkDrop
 from .chaos_blade.svc_svc import SvcSvcNetworkDelay, SvcSvcNetworkDrop
-from .chaos_blade.pod import PodCpuFull, PodMysqlDelay
+from .chaos_blade.pod import PodCpuFull, PodMysqlDelay, PodTypedMysqlDelay, PodRabbitmqDelay
 from .chaos_blade.svc import SvcCpuFull
 from .chaos_blade.jvm import JvmCpuFull
 from .chaos_mesh.pod import PodHttpRequestDelay, PodHttpRequestAbort
@@ -52,7 +52,7 @@ class CommandBuilder(object):
             if command_name == 'svc-svc-network-drop':
                 return SvcSvcNetworkDrop(k8s_master_ip, src, dest, interface, duration, interval, namespace)
 
-        if command_name in ('pod-mysql-delay', 'jvm-cpu-full', 'pod-cpu-full', 'svc-cpu-full'):
+        if command_name in ('pod-mysql-delay', 'jvm-cpu-full', 'pod-cpu-full', 'svc-cpu-full', 'pod-rabbitmq-delay'):
             pod_prefix = target.strip()
             if command_name == 'pod-mysql-delay':
                 return PodMysqlDelay(pod_prefix, time, duration, interval, namespace)
@@ -62,6 +62,12 @@ class CommandBuilder(object):
                 return PodCpuFull(k8s_master_ip, pod_prefix, duration, interval, namespace)
             if command_name == 'svc-cpu-full':
                 return SvcCpuFull(k8s_master_ip, pod_prefix, duration, interval, namespace)
+            if command_name == 'pod-rabbitmq-delay':
+                return PodRabbitmqDelay(pod_prefix, time, duration, interval, namespace)
+
+        if command_name == 'pod-typed-mysql-delay':
+            pod_prefix, sqltype = target.strip().split()
+            return PodTypedMysqlDelay(pod_prefix, sqltype, time, duration, interval, namespace)
 
         logging.error(f'Cannot recognize command name: {command_name}')
         raise Exception(f'Cannot recognize command name: {command_name}')
