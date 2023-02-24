@@ -8,20 +8,20 @@ records:
 
 injection:
   metadata:
-    st_time: 2023-02-23 13:30:00  # start time of all fault injection tasks
+    st_time: 2023-02-24 09:45:00  # start time of all fault injection tasks
     namespace: default  # train-ticket deployment namespace
     chaosmesh:
       tmp_dir: ./command/chaos_mesh/tmp/  # tmp dir to store the generated yaml files.
       kinds:
         - HTTPChaos
     faults:  # must inject api faults first because of bugs in chaos-blade
-      - api-delay  # chaos-blade
-      - pod-mysql-delay  # chaos-blade
-      # - pod-typed-mysql-delay  # chaos-blade
-      # - pod-rabbitmq-delay  # chaos-blade
-      # - jvm-cpu-full  # chaos-blade
-      # - pod-http-request-delay  # chaos-mesh
-      # - svc-http-request-delay  # chaos-mesh
+      # - api-delay  # chaos-blade
+      # - pod-mysql-delay  # chaos-blade
+      - pod-typed-mysql-delay  # chaos-blade
+      - pod-rabbitmq-delay  # chaos-blade
+      - jvm-cpu-full  # chaos-blade
+      - pod-http-request-delay  # chaos-mesh
+      - svc-http-request-delay  # chaos-mesh
       # - pod-pod-network-delay  # chaos-blade
       # - svc-svc-network-delay  # chaos-blade
       # - pod-cpu-full  # chaos-blade
