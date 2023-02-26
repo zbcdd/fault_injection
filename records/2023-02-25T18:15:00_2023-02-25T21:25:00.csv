@@ -1,0 +1,13 @@
+st_time,ed_time,fault_type,root_cause,filename
+2023-02-25T18:15:00,2023-02-25T18:21:00,pod-http-request-delay,ts-preserve-service-56548b8fd4-t4dgh,2023-02-25T18:15:00_2023-02-25T18:21:00
+2023-02-25T18:30:02,2023-02-25T18:36:00,pod-http-request-delay,ts-route-service-cd8474f97-w6tpd,2023-02-25T18:30:02_2023-02-25T18:36:00
+2023-02-25T18:45:00,2023-02-25T18:51:00,pod-http-request-delay,ts-train-food-service-9557b666c-xcdlm,2023-02-25T18:45:00_2023-02-25T18:51:00
+2023-02-25T19:00:00,2023-02-25T19:06:00,pod-http-request-delay,ts-travel2-service-686c895647-mq5d9,2023-02-25T19:00:00_2023-02-25T19:06:00
+2023-02-25T19:15:00,2023-02-25T19:21:00,svc-http-request-delay,"ts-admin-route-service-77cd6cf987-6pcgr,ts-admin-route-service-77cd6cf987-r4plr",2023-02-25T19:15:00_2023-02-25T19:21:00
+2023-02-25T19:30:00,2023-02-25T19:36:00,svc-http-request-delay,"ts-consign-price-service-c5f7dc849-cjvc5,ts-consign-price-service-c5f7dc849-x2jk6",2023-02-25T19:30:00_2023-02-25T19:36:00
+2023-02-25T19:45:00,2023-02-25T19:51:00,svc-http-request-delay,"ts-food-service-57ff7645dc-5h864,ts-food-service-57ff7645dc-xqt92",2023-02-25T19:45:00_2023-02-25T19:51:00
+2023-02-25T20:00:00,2023-02-25T20:06:00,svc-http-request-delay,"ts-payment-service-5fb5487dd5-6bpjg,ts-payment-service-5fb5487dd5-bncz5",2023-02-25T20:00:00_2023-02-25T20:06:00
+2023-02-25T20:15:00,2023-02-25T20:21:00,svc-http-request-delay,"ts-rebook-service-7d69b45f79-8kkhh,ts-rebook-service-7d69b45f79-k5lxn",2023-02-25T20:15:00_2023-02-25T20:21:00
+2023-02-25T20:30:01,2023-02-25T20:36:00,svc-http-request-delay,"ts-security-service-677c5578f7-dlww8,ts-security-service-677c5578f7-wz8bq",2023-02-25T20:30:01_2023-02-25T20:36:00
+2023-02-25T20:45:00,2023-02-25T20:51:00,svc-http-request-delay,"ts-travel-plan-service-d45b64468-dr5sl,ts-travel-plan-service-d45b64468-v4hvn",2023-02-25T20:45:00_2023-02-25T20:51:00
+2023-02-25T21:00:00,2023-02-25T21:06:00,svc-http-request-delay,"ts-verification-code-service-74447dff85-4tdxp,ts-verification-code-service-74447dff85-wp7ms",2023-02-25T21:00:00_2023-02-25T21:06:00

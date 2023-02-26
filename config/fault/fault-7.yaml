@@ -8,7 +8,7 @@ records:
 
 injection:
   metadata:
-    st_time: 2023-02-24 09:45:00  # start time of all fault injection tasks
+    st_time: 2023-02-26 00:15:00  # start time of all fault injection tasks
     namespace: default  # train-ticket deployment namespace
     chaosmesh:
       tmp_dir: ./command/chaos_mesh/tmp/  # tmp dir to store the generated yaml files.
@@ -17,9 +17,9 @@ injection:
     faults:  # must inject api faults first because of bugs in chaos-blade
       # - api-delay  # chaos-blade
       # - pod-mysql-delay  # chaos-blade
-      - pod-typed-mysql-delay  # chaos-blade
-      - pod-rabbitmq-delay  # chaos-blade
-      - jvm-cpu-full  # chaos-blade
+      # - pod-typed-mysql-delay  # chaos-blade
+      # - pod-rabbitmq-delay  # chaos-blade
+      # - jvm-cpu-full  # chaos-blade
       - pod-http-request-delay  # chaos-mesh
       - svc-http-request-delay  # chaos-mesh
       # - pod-pod-network-delay  # chaos-blade
@@ -110,13 +110,13 @@ injection:
         interval: 540  # (s) interval between two adjacent faults
         time: 500  # (ms) delay time
       targets:  # labels.app(service) port
-        - ts-admin-basic-info-service 18767
-        - ts-admin-user-service 16115
-        - ts-cancel-service 18885
-        - ts-contacts-service 12347
-        - ts-order-other-service 12032
+        # - ts-admin-basic-info-service 18767
+        # - ts-admin-user-service 16115
+        # - ts-cancel-service 18885
+        # - ts-contacts-service 12347
+        # - ts-order-other-service 12032
         - ts-preserve-service 14568
-        - ts-route-service 11178
+        # - ts-route-service 11178  # ERROR 去掉
         - ts-train-food-service 19999
         - ts-travel2-service 16346
     svc-http-request-delay:
