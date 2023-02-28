@@ -8,7 +8,7 @@ records:
 
 injection:
   metadata:
-    st_time: 2023-02-28 12:30:00  # start time of all fault injection tasks
+    st_time: 2023-02-28 15:00:00  # start time of all fault injection tasks
     namespace: default  # train-ticket deployment namespace
     chaosmesh:
       tmp_dir: ./command/chaos_mesh/tmp/  # tmp dir to store the generated yaml files.
@@ -23,7 +23,7 @@ injection:
       # - pod-http-request-delay  # chaos-mesh
       # - svc-http-request-delay  # chaos-mesh
       - pod-pod-network-delay  # chaos-blade
-      # - svc-svc-network-delay  # chaos-blade
+      - svc-svc-network-delay  # chaos-blade
       # - pod-cpu-full  # chaos-blade
       # - svc-cpu-full  # chaos-blade
   spec:
@@ -140,21 +140,21 @@ injection:
         time: 500  # (ms) delay time
         interface: eth0
       targets:  # src dest
-        - ts-seat-service ts-order-service
-        - ts-preserve-service ts-seat-service
-        - ts-basic-service ts-route-service
-        - ts-basic-service ts-train-service
-        - ts-preserve-service ts-order-service
-        - ts-execute-service ts-order-other-service
-        - ts-admin-basic-info-service ts-station-service
-        - ts-rebook-service ts-travel-service
-        # - ts-preserve-other-service ts-basic-service
-        # - ts-preserve-service ts-contacts-service
-        # - ts-cancel-service ts-order-other-service
-        # - ts-admin-travel-service ts-route-service
-        # - ts-admin-user-service ts-user-service
-        # - ts-preserve-other-service ts-security-service
-        # - ts-preserve-other-service ts-travel2-service
+        # - ts-seat-service ts-order-service
+        # - ts-preserve-service ts-seat-service
+        # - ts-basic-service ts-route-service
+        # - ts-basic-service ts-train-service
+        # - ts-preserve-service ts-order-service
+        # - ts-execute-service ts-order-other-service
+        # - ts-admin-basic-info-service ts-station-service
+        # - ts-rebook-service ts-travel-service
+        - ts-preserve-other-service ts-basic-service
+        - ts-preserve-service ts-contacts-service
+        - ts-cancel-service ts-order-other-service
+        - ts-admin-travel-service ts-route-service
+        - ts-admin-user-service ts-user-service
+        - ts-preserve-other-service ts-security-service
+        - ts-preserve-other-service ts-travel2-service
     svc-svc-network-delay:
       info:
         duration: 360  # (s) duration of each fault
