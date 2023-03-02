@@ -1,0 +1,328 @@
+logs:
+  dir: ./logs/run_info/
+  format: "%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s - %(message)s"
+
+records:
+  dir: ./records/
+  chaosmesh_records: http://10.176.122.154:30331/api/events  # chaosmesh events query url
+
+injection:
+  metadata:
+    st_time: 2023-03-02 13:00:00  # start time of all fault injection tasks
+    namespace: default  # train-ticket deployment namespace
+    chaosmesh:
+      tmp_dir: ./command/chaos_mesh/tmp/  # tmp dir to store the generated yaml files.
+      kinds:
+        - HTTPChaos
+    faults:  # must inject api faults first because of bugs in chaos-blade
+      - api-delay  # chaos-blade
+      - pod-mysql-delay  # chaos-blade
+      - pod-typed-mysql-delay  # chaos-blade
+      - pod-rabbitmq-delay  # chaos-blade
+      - jvm-cpu-full  # chaos-blade
+      - pod-http-request-delay  # chaos-mesh
+      - svc-http-request-delay  # chaos-mesh
+      - pod-pod-network-delay  # chaos-blade
+      - svc-svc-network-delay  # chaos-blade
+      - pod-cpu-full  # chaos-blade
+      - svc-cpu-full  # chaos-blade
+  spec:
+    api-delay:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+      targets: # service classname methodname
+        - ts-consign-service consign.controller.ConsignController findByOrderId
+        - ts-preserve-service preserve.controller.PreserveController preserve
+        - ts-preserve-other-service preserveOther.controller.PreserveOtherController preserve
+        - ts-rebook-service rebook.controller.RebookController rebook
+        - ts-config-service config.controller.ConfigController retrieve
+        - ts-cancel-service cancel.controller.CancelController cancelTicket
+        - ts-admin-basic-info-service adminbasic.controller.AdminBasicInfoController getAllPrices
+        - ts-execute-service execute.controller.ExecuteControlller executeTicket
+        - ts-cancel-service cancel.controller.CancelController calculate
+        - ts-rebook-service rebook.controller.RebookController payDifference
+    pod-mysql-delay:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+      targets: # pod_prefix
+        - ts-delivery-service
+        - ts-payment-service
+    pod-typed-mysql-delay:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+      targets: # pod_prefix sqltype(insert|delete|update|select)
+        - ts-assurance-service insert
+        - ts-config-service insert
+        - ts-consign-service insert
+        - ts-delivery-service insert
+        - ts-payment-service insert
+        - ts-inside-payment-service insert
+        - ts-station-service insert
+        - ts-order-service delete
+        - ts-route-service delete
+        - ts-contacts-service delete
+        - ts-price-service delete
+        - ts-config-service delete
+        - ts-consign-service update
+        - ts-order-service update
+        - ts-price-service update
+        - ts-order-other-service select
+        - ts-order-service select
+        - ts-security-service select
+        - ts-travel-service select
+        - ts-station-service select
+        - ts-train-service select
+        - ts-route-service select
+        - ts-config-service select
+        - ts-user-service select
+    pod-rabbitmq-delay:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+      targets:  # pod_prefix
+        - ts-food-service
+    jvm-cpu-full:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+      targets:
+        - ts-admin-basic-info-service
+        - ts-admin-order-service
+        - ts-admin-route-service
+        - ts-admin-travel-service
+        - ts-admin-user-service
+        - ts-auth-service
+        - ts-basic-service
+        - ts-cancel-service
+        - ts-consign-price-service
+        - ts-contacts-service
+        - ts-execute-service
+        - ts-food-service
+        - ts-gateway-service
+        - ts-order-other-service
+        - ts-order-service
+        - ts-payment-service
+        - ts-preserve-other-service
+        - ts-preserve-service
+        - ts-rebook-service
+        - ts-route-plan-service
+        - ts-route-service
+        - ts-seat-service
+        - ts-security-service
+        - ts-train-food-service
+        - ts-train-service
+        - ts-travel-plan-service
+        - ts-user-service
+        - ts-verification-code-service
+    pod-http-request-delay:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+      targets:  # labels.app(service) port
+        - ts-admin-order-service 16112
+        - ts-admin-route-service 16113
+        - ts-admin-travel-service 16114
+        - ts-assurance-service 18888
+        - ts-auth-service 12349
+        - ts-basic-service 15680
+        - ts-config-service	15679
+        - ts-consign-price-service 16110
+        - ts-consign-service 16111
+        - ts-execute-service 12386
+        - ts-food-service	18856
+        - ts-gateway-service 18888
+        - ts-inside-payment-service 18673
+        - ts-order-service 12031
+        - ts-payment-service 19001
+        - ts-preserve-other-service 14569
+        - ts-price-service 16579
+        - ts-rebook-service 18886
+        - ts-route-plan-service 14578
+        - ts-seat-service 18898
+        - ts-security-service 11188
+        - ts-station-service 12345
+        - ts-train-service 14567
+        - ts-travel-plan-service 14322
+        - ts-travel-service 12346
+        - ts-user-service 12346
+        - ts-verification-code-service 15678
+    svc-http-request-delay:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+      targets:  # labels.app(service) port
+        - ts-admin-basic-info-service 18767
+        - ts-admin-order-service 16112
+        - ts-admin-travel-service 16114
+        - ts-admin-user-service 16115
+        - ts-assurance-service 18888
+        - ts-auth-service 12349
+        - ts-basic-service 15680
+        - ts-cancel-service 18885
+        - ts-config-service 15679
+        - ts-consign-service 16111
+        - ts-contacts-service 12347
+        - ts-execute-service 12386
+        - ts-gateway-service 18888
+        - ts-inside-payment-service 18673
+        - ts-order-other-service 12032
+        - ts-order-service 12031
+        - ts-preserve-other-service 14569
+        - ts-preserve-service 14568
+        - ts-price-service 16579
+        - ts-rebook-service 18886
+        - ts-route-plan-service 14578
+        - ts-seat-service 18898
+        - ts-station-service 12345
+        - ts-train-food-service 19999
+        - ts-train-service 14567
+        - ts-travel-service 12346
+        - ts-travel2-service 16346
+        - ts-user-service 12346
+    pod-pod-network-delay:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+        interface: eth0
+      targets:  # src dest
+        - ts-inside-payment-service ts-order-service
+        - ts-security-service ts-order-other-service
+        - ts-admin-basic-info-service ts-contacts-service
+        - ts-inside-payment-service ts-payment-service
+        - ts-security-service ts-order-service
+        - ts-preserve-service ts-contacts-service
+        - ts-travel-service ts-basic-service
+        - ts-basic-service ts-train-service
+        - ts-preserve-service ts-travel-service
+        - ts-basic-service ts-route-service
+        - ts-travel-service ts-seat-service
+        - ts-seat-service ts-order-service
+        - ts-basic-service ts-price-service
+        - ts-seat-service ts-config-service
+        - ts-preserve-service ts-basic-service
+        - ts-route-plan-service ts-travel2-service
+        - ts-preserve-service ts-order-service
+        - ts-food-service ts-train-food-service
+        - ts-preserve-service ts-seat-service
+        - ts-auth-service ts-verification-code-service
+        - ts-execute-service ts-order-service
+        - ts-inside-payment-service ts-order-other-service
+        - ts-travel-plan-service ts-route-plan-service
+        - ts-route-plan-service ts-travel-service
+        - ts-travel2-service ts-basic-service
+        - ts-seat-service ts-order-other-service
+        - ts-travel-service ts-route-service
+        - ts-travel2-service ts-route-service
+        - ts-travel-plan-service ts-train-service
+        - ts-route-plan-service ts-route-service
+        - ts-execute-service ts-order-other-service
+        - ts-travel-plan-service ts-seat-service
+    svc-svc-network-delay:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+        interface: eth0
+      targets:  # src dest
+        - ts-inside-payment-service ts-order-service
+        - ts-admin-basic-info-service ts-contacts-service
+        - ts-preserve-service ts-security-service
+        - ts-security-service ts-order-service
+        - ts-basic-service ts-price-service
+        - ts-security-service ts-order-other-service
+        - ts-preserve-service ts-travel-service
+        - ts-travel-service ts-basic-service
+        - ts-basic-service ts-station-service
+        - ts-travel-service ts-seat-service
+        - ts-seat-service ts-config-service
+        - ts-preserve-service ts-basic-service
+        - ts-inside-payment-service ts-payment-service
+        - ts-preserve-service ts-user-service
+        - ts-food-service ts-train-food-service
+        - ts-auth-service ts-verification-code-service
+        - ts-cancel-service ts-order-service
+        - ts-route-plan-service ts-travel2-service
+        - ts-travel-plan-service ts-seat-service
+        - ts-execute-service ts-order-service
+        - ts-inside-payment-service ts-order-other-service
+        - ts-travel-plan-service ts-route-plan-service
+        - ts-route-plan-service ts-travel-service
+        - ts-travel2-service ts-basic-service
+        - ts-consign-service ts-consign-price-service
+        - ts-travel2-service ts-seat-service
+        - ts-seat-service ts-order-other-service
+        - ts-travel-service ts-route-service
+        - ts-travel2-service ts-route-service
+        - ts-travel-plan-service ts-train-service
+        - ts-route-plan-service ts-route-service
+    pod-cpu-full:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+      targets:
+        - ts-admin-order-service
+        - ts-admin-basic-info-service
+        - ts-admin-route-service
+        - ts-admin-travel-service
+        - ts-admin-user-service
+        - ts-assurance-service
+        - ts-auth-service
+        - ts-basic-service
+        - ts-cancel-service
+        - ts-config-service
+        - ts-consign-price-service
+        - ts-execute-service
+        - ts-food-service
+        - ts-payment-service
+        - ts-preserve-other-service
+        - ts-preserve-service
+        - ts-price-service
+        - ts-rebook-service
+        - ts-route-plan-service
+        - ts-seat-service
+        - ts-security-service
+        - ts-train-service
+        - ts-travel-plan-service
+        - ts-user-service
+        - ts-verification-code-service
+    svc-cpu-full:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+      targets:
+        - ts-admin-basic-info-service
+        - ts-admin-order-service
+        - ts-admin-route-service
+        - ts-admin-travel-service
+        - ts-admin-user-service
+        - ts-auth-service
+        - ts-basic-service
+        - ts-cancel-service
+        - ts-consign-service
+        - ts-contacts-service
+        - ts-execute-service
+        - ts-food-service
+        - ts-gateway-service
+        - ts-inside-payment-service
+        - ts-order-other-service
+        - ts-order-service
+        - ts-preserve-other-service
+        - ts-preserve-service
+        - ts-rebook-service
+        - ts-route-plan-service
+        - ts-route-service
+        - ts-seat-service
+        - ts-station-service
+        - ts-train-food-service
+        - ts-travel-plan-service
+        - ts-verification-code-service
