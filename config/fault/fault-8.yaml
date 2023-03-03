@@ -137,7 +137,7 @@ injection:
         - ts-consign-price-service 16110
         - ts-consign-service 16111
         - ts-execute-service 12386
-        - ts-food-service	18856
+        - ts-food-service 18856
         - ts-gateway-service 18888
         - ts-inside-payment-service 18673
         - ts-order-service 12031
