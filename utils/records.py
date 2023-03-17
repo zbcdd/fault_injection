@@ -166,3 +166,33 @@ def get_records(chaosblade_ips: List[str], chaosmesh_url: str, chaosmesh_tmp_dir
     df = pd.DataFrame(data)
     df = df.sort_values('st_time')
     return df
+
+
+def merge_rows(rows, max_st_time, min_ed_time):
+    st_time = max([row['st_time'] for row in rows])
+    ed_time = min([row['ed_time'] for row in rows])
+    assert st_time == max_st_time and ed_time == min_ed_time
+    fault_type = '@'.join([row['fault_type'] for row in rows])
+    root_cause = '@'.join([row['root_cause'] for row in rows])
+    filename = '_'.join([st_time, ed_time])
+    return [st_time, ed_time, fault_type, root_cause, filename]
+
+
+def merge_records(record_df):
+    record_df = record_df.sort_values('st_time')
+    new_df = pd.DataFrame(columns=['st_time', 'ed_time', 'fault_type', 'root_cause', 'filename'])
+    cur_records = []
+    cur_max_st_time = record_df.iloc[0]['st_time']
+    cur_min_ed_time = record_df.iloc[0]['ed_time']
+    for idx, row in record_df.iterrows():
+        st_time, ed_time = row['st_time'], row['ed_time']
+        if st_time > cur_min_ed_time:
+            new_df.loc[len(new_df)] = merge_rows(cur_records, cur_max_st_time, cur_min_ed_time)
+            cur_records = []
+            cur_max_st_time, cur_min_ed_time = st_time, ed_time
+        else:
+            cur_max_st_time = max(cur_max_st_time, st_time)
+            cur_min_ed_time = min(cur_min_ed_time, ed_time)
+        cur_records.append(row)
+    new_df.loc[len(new_df)] = merge_rows(cur_records, cur_max_st_time, cur_min_ed_time)
+    return new_df

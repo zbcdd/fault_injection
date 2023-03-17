@@ -11,6 +11,7 @@ from utils.file import load_yaml, make_sure_dir_exists
 from utils.chaosblade import check_all_chaosblade_status
 from utils.chaosmesh import check_all_chaosmesh_status
 from utils.records import get_records
+from utils.records import merge_records
 
 
 @click.command()
@@ -59,9 +60,22 @@ def _fault_injection(k8s: str, fault: str) -> None:
         fault_info['k8s_master_ip'] = k8s_master_ip
         fault_targets = fault['targets']
         for target in fault_targets:
-            cmd = command_builder.build(fault_info, target)
-            cmd.record_data = record_data
-            command_scheduler.add_job(cmd)
+            if fault_name == 'multi-fault':
+                multi_faults = [i.strip() for i in target.split(' - ')]
+                actual_names = [i.strip() for i in multi_faults[0].split(' ')]
+                actual_targets = [i.strip() for i in multi_faults[1:]]
+                assert len(actual_names) == len(actual_targets)
+                fault_index = 0
+                for actual_fault_name, actual_target in zip(actual_names, actual_targets):
+                    fault_info['fault_name'] = actual_fault_name
+                    cmd = command_builder.build(fault_info, actual_target)
+                    cmd.record_data = record_data
+                    command_scheduler.add_job(cmd, fault_index==len(actual_names)-1)
+                    fault_index += 1
+            else:
+                cmd = command_builder.build(fault_info, target)
+                cmd.record_data = record_data
+                command_scheduler.add_job(cmd)
 
     # run
     command_scheduler.start()
@@ -94,6 +108,7 @@ def _fault_injection(k8s: str, fault: str) -> None:
     record_data['root_cause'] += list(df['target'])
     record_df = pd.DataFrame(record_data)
     record_df = record_df.sort_values('st_time')
+    record_df = merge_records(record_df)
     record_df.to_csv(record_path, index=False)
     logging.info(f'records saved at {record_path}, st_time: {st_time}, final_time: {final_time}')
 
