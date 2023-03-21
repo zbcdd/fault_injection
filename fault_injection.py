@@ -70,7 +70,7 @@ def _fault_injection(k8s: str, fault: str) -> None:
                     fault_info['fault_name'] = actual_fault_name
                     cmd = command_builder.build(fault_info, actual_target)
                     cmd.record_data = record_data
-                    command_scheduler.add_job(cmd, fault_index==len(actual_names)-1)
+                    command_scheduler.add_job(cmd, fault_index == len(actual_names)-1)
                     fault_index += 1
             else:
                 cmd = command_builder.build(fault_info, target)
@@ -79,7 +79,7 @@ def _fault_injection(k8s: str, fault: str) -> None:
 
     # run
     command_scheduler.start()
-    final_time = command_scheduler.cur_time + timedelta(minutes=10)
+    final_time = command_scheduler.cur_time
     try:
         while True:
             now = datetime.now()
