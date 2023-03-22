@@ -1,0 +1,5 @@
+st_time,ed_time,fault_type,root_cause,filename
+2023-03-21T18:46:31,2023-03-21T18:51:00,api-delay@api-delay,ts-preserve-service-56548b8fd4-8k877 preserve.controller.PreserveController preserve@ts-consign-service-97b57cdf6-7569t consign.controller.ConsignController findByOrderId,2023-03-21T18:46:31_2023-03-21T18:51:00
+2023-03-21T19:01:01,2023-03-21T19:06:00,api-delay@api-delay,ts-rebook-service-7d69b45f79-m6jpr rebook.controller.RebookController rebook@ts-preserve-other-service-58bb58c679-nf784 preserveOther.controller.PreserveOtherController preserve,2023-03-21T19:01:01_2023-03-21T19:06:00
+2023-03-21T19:16:06,2023-03-21T19:21:00,api-delay@api-delay,ts-cancel-service-646644ddf4-7h9fj cancel.controller.CancelController calculate@ts-execute-service-74b9955ddc-rc2jp execute.controller.ExecuteControlller executeTicket,2023-03-21T19:16:06_2023-03-21T19:21:00
+2023-03-21T19:31:16,2023-03-21T19:36:00,pod-typed-mysql-delay@pod-typed-mysql-delay,ts-order-service-5c8b698d7b-dtflc mysql-select@ts-station-service-666c97f68d-46t8x mysql-select,2023-03-21T19:31:16_2023-03-21T19:36:00
