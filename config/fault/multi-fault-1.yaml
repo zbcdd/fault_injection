@@ -23,51 +23,51 @@ injection:
         interval: 540  # (s) interval between two adjacent faults
         time: 500  # (ms) delay time
       targets:
-        # - api-delay api-delay
-        #   - ts-consign-service consign.controller.ConsignController findByOrderId
-        #   - ts-preserve-service preserve.controller.PreserveController preserve
-        # - api-delay api-delay
-        #   - ts-preserve-other-service preserveOther.controller.PreserveOtherController preserve
-        #   - ts-rebook-service rebook.controller.RebookController rebook
-        # - api-delay api-delay
-        #   - ts-execute-service execute.controller.ExecuteControlller executeTicket
-        #   - ts-cancel-service cancel.controller.CancelController calculate
-        # - pod-typed-mysql-delay pod-typed-mysql-delay
-        #   - ts-station-service select
-        #   - ts-order-service select
-        # - pod-typed-mysql-delay pod-typed-mysql-delay
-        #   - ts-travel-service select
-        #   - ts-price-service delete
-        # - pod-typed-mysql-delay pod-typed-mysql-delay
-        #   - ts-station-service select
-        #   - ts-order-other-service select
-        # - pod-http-request-delay pod-http-request-delay
-        #   - ts-train-food-service 19999
-        #   - ts-consign-price-service 16110
-        # - pod-http-request-delay pod-http-request-delay
-        #   - ts-order-other-service 12032
-        #   - ts-contacts-service 12347
-        # - pod-http-request-delay pod-http-request-delay
-        #   - ts-price-service 16579
-        #   - ts-route-plan-service 14578
-        # - api-delay pod-typed-mysql-delay
-        #   - ts-preserve-other-service preserveOther.controller.PreserveOtherController preserve
-        #   - ts-consign-service update
-        # - api-delay pod-typed-mysql-delay
-        #   - ts-config-service config.controller.ConfigController retrieve
-        #   - ts-order-other-service select
-        # - api-delay pod-typed-mysql-delay
-        #   - ts-consign-service consign.controller.ConsignController findByOrderId
-        #   - ts-price-service delete
-        # - api-delay pod-http-request-delay
-        #   - ts-cancel-service cancel.controller.CancelController cancelTicket
-        #   - ts-order-other-service 12032
-        # - api-delay pod-http-request-delay
-        #   - ts-admin-basic-info-service adminbasic.controller.AdminBasicInfoController getAllPrices
-        #   - ts-travel2-service 16346
-        # - api-delay pod-http-request-delay
-        #   - ts-rebook-service rebook.controller.RebookController payDifference
-        #   - ts-price-service 16579
+        - api-delay api-delay
+          - ts-consign-service consign.controller.ConsignController findByOrderId
+          - ts-verification-code-service verifycode.controller.VerifyCodeController imageCode
+        - api-delay api-delay
+          - ts-preserve-other-service preserveOther.controller.PreserveOtherController preserve
+          - ts-rebook-service rebook.controller.RebookController rebook
+        - api-delay api-delay
+          - ts-execute-service execute.controller.ExecuteControlller executeTicket
+          - ts-cancel-service cancel.controller.CancelController calculate
+        - pod-typed-mysql-delay pod-typed-mysql-delay
+          - ts-config-service insert
+          - ts-train-food-service select
+        - pod-typed-mysql-delay pod-typed-mysql-delay
+          - ts-travel-service select
+          - ts-price-service delete
+        - pod-typed-mysql-delay pod-typed-mysql-delay
+          - ts-config-service insert
+          - ts-train-food-service select
+        - pod-http-request-delay pod-http-request-delay
+          - ts-verification-code-service 15678
+          - ts-contacts-service 12347
+        - pod-http-request-delay pod-http-request-delay
+          - ts-train-food-service 19999
+          - ts-consign-price-service 16110
+        - pod-http-request-delay pod-http-request-delay
+          - ts-price-service 16579
+          - ts-route-plan-service 14578
+        - api-delay pod-typed-mysql-delay
+          - ts-assurance-service assurance.controller.AssuranceController getAllAssuranceType
+          - ts-consign-service update
+        - api-delay pod-typed-mysql-delay
+          - ts-config-service config.controller.ConfigController retrieve
+          - ts-train-food-service select
+        - api-delay pod-typed-mysql-delay
+          - ts-consign-service consign.controller.ConsignController findByOrderId
+          - ts-price-service delete
+        - api-delay pod-http-request-delay
+          - ts-cancel-service cancel.controller.CancelController cancelTicket
+          - ts-verification-code-service 15678
+        - api-delay pod-http-request-delay
+          - ts-admin-basic-info-service adminbasic.controller.AdminBasicInfoController getAllPrices
+          - ts-travel2-service 16346
+        - api-delay pod-http-request-delay
+          - ts-rebook-service rebook.controller.RebookController payDifference
+          - ts-price-service 16579
         - pod-typed-mysql-delay pod-http-request-delay
           - ts-station-service insert
           - ts-train-food-service 19999
