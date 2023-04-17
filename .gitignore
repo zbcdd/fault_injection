@@ -159,3 +159,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 command/chaos_mesh/tmp/
+
+config/k8s/kube_config_154

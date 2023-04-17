@@ -13,4 +13,4 @@ k8s:
       ip: 10.176.122.161
     - name: k8s-node5
       ip: 10.176.122.162
-  kube_config: ./config/k8s/kube_config_154
+  kube_config: /root/.kube/config
