@@ -4,11 +4,11 @@ logs:
 
 records:
   dir: ./records/
-  chaosmesh_records: http://10.176.122.154:30331/api/events  # chaosmesh events query url
+  chaosmesh_records: http://10.176.122.154:30228/api/events  # chaosmesh events query url
 
 injection:
   metadata:
-    st_time: 2023-04-17 13:15:00  # start time of all fault injection tasks
+    st_time: 2023-04-18 10:40:00  # start time of all fault injection tasks
     namespace: default  # train-ticket deployment namespace
     chaosmesh:
       tmp_dir: ./command/chaos_mesh/tmp/  # tmp dir to store the generated yaml files.
@@ -23,21 +23,21 @@ injection:
   spec:
     jvm-cpu-full:
       info:
-        duration: 300  # (s) duration of each fault
+        duration: 1500  # (s) duration of each fault
         interval: 540  # (s) interval between two adjacent faults
       targets:
         - ts-admin-user-service
         - ts-user-service
     api-delay:
       info:
-        duration: 300  # (s) duration of each fault
+        duration: 1500  # (s) duration of each fault
         interval: 540  # (s) interval between two adjacent faults
         time: 500  # (ms) delay time
       targets: # service classname methodname
         - ts-travel2-service travel2.controller.Travel2Controller queryInfo
     svc-svc-network-delay:
       info:
-        duration: 300  # (s) duration of each fault
+        duration: 1500  # (s) duration of each fault
         interval: 540  # (s) interval between two adjacent faults
         time: 500  # (ms) delay time
         interface: eth0
@@ -45,13 +45,13 @@ injection:
         - ts-rebook-service ts-order-service
     svc-cpu-full:
       info:
-        duration: 300  # (s) duration of each fault
+        duration: 1500  # (s) duration of each fault
         interval: 540  # (s) interval between two adjacent faults
       targets:
         - ts-user-service
     svc-http-request-delay:
       info:
-        duration: 300  # (s) duration of each fault
+        duration: 1500  # (s) duration of each fault
         interval: 540  # (s) interval between two adjacent faults
         time: 500  # (ms) delay time
       targets:  # labels.app(service) port

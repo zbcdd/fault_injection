@@ -1,0 +1,7 @@
+st_time,ed_time,fault_type,root_cause,filename
+2023-04-17T16:30:03,2023-04-17T16:35:00,jvm-cpu-full,ts-admin-user-service-57fbb896c4-jl6f8,2023-04-17T16:30:03_2023-04-17T16:35:00
+2023-04-17T16:44:03,2023-04-17T16:49:00,jvm-cpu-full,ts-user-service-5d65df69b-4xfgh,2023-04-17T16:44:03_2023-04-17T16:49:00
+2023-04-17T16:58:03,2023-04-17T17:03:00,api-delay,ts-travel2-service-686c895647-kw79h travel2.controller.Travel2Controller queryInfo,2023-04-17T16:58:03_2023-04-17T17:03:00
+2023-04-17T17:12:04,2023-04-17T17:17:00,svc-svc-network-delay,"ts-rebook-service(ts-rebook-service-7d69b45f79-62npw,ts-rebook-service-7d69b45f79-wfrn7) ts-order-service(ts-order-service-5c8b698d7b-c2n2p,ts-order-service-5c8b698d7b-dqdc2)",2023-04-17T17:12:04_2023-04-17T17:17:00
+2023-04-17T17:26:05,2023-04-17T17:31:20,svc-cpu-full,"ts-user-service(ts-user-service-5d65df69b-4xfgh,ts-user-service-5d65df69b-nfbtb)",2023-04-17T17:26:05_2023-04-17T17:31:20
+2023-04-17T17:40:01,2023-04-17T17:45:00,svc-http-request-delay,"ts-consign-price-service-c5f7dc849-rkjfl,ts-consign-price-service-c5f7dc849-wx549",2023-04-17T17:40:01_2023-04-17T17:45:00
