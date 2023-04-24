@@ -1,6 +1,6 @@
 import logging
 from command.basic_command import ChaosBladeCommand
-from utils.k8s import get_pod_names, get_one_container_id_with_host_ip
+from utils.k8s import get_pod_names, get_one_container_id_with_host_ip, get_containers_id_with_host_ip
 
 
 class PodCpuFull(ChaosBladeCommand):
@@ -31,19 +31,21 @@ class PodCpuFull(ChaosBladeCommand):
 
 class PodMysqlDelay(ChaosBladeCommand):
 
-    def __init__(self, pod_prefix, time, duration, interval, namespace):
+    def __init__(self, pod_prefix, time, duration, interval, namespace, idx=0):
 
         super(PodMysqlDelay, self).__init__(duration, interval)
         self.fault_type = 'pod-mysql-delay'
         self.pod_prefix = pod_prefix
         self.time = time
         self.namespace = namespace
+        self.idx = idx
 
     def __str__(self):
         return f'[pod-mysql-delay] pod_prefix: {self.pod_prefix} namespace: {self.namespace} time: {self.time}'
 
     def init(self):
-        pod_name, container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.pod_prefix)
+        res = get_containers_id_with_host_ip(self.namespace, self.pod_prefix)
+        pod_name, container_id, host_ip = res[self.idx]
         if not container_id:
             logging.error(f'Cannot find pod which name start with {self.pod_prefix}')
             raise Exception(f'Cannot find pod which name start with {self.pod_prefix}')
@@ -59,7 +61,7 @@ class PodMysqlDelay(ChaosBladeCommand):
 
 class PodTypedMysqlDelay(ChaosBladeCommand):
 
-    def __init__(self, pod_prefix, sqltype, time, duration, interval, namespace):
+    def __init__(self, pod_prefix, sqltype, time, duration, interval, namespace, idx=0):
 
         super(PodTypedMysqlDelay, self).__init__(duration, interval)
         self.fault_type = 'pod-typed-mysql-delay'
@@ -67,12 +69,14 @@ class PodTypedMysqlDelay(ChaosBladeCommand):
         self.sqltype = sqltype
         self.time = time
         self.namespace = namespace
+        self.idx = idx
 
     def __str__(self):
         return f'[pod-typed-mysql-delay] pod_prefix: {self.pod_prefix} sqltype: {self.sqltype} namespace: {self.namespace} time: {self.time}'
 
     def init(self):
-        pod_name, container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.pod_prefix)
+        res = get_containers_id_with_host_ip(self.namespace, self.pod_prefix)
+        pod_name, container_id, host_ip = res[self.idx]
         if not container_id:
             logging.error(f'Cannot find pod which name start with {self.pod_prefix}')
             raise Exception(f'Cannot find pod which name start with {self.pod_prefix}')
@@ -89,19 +93,21 @@ class PodTypedMysqlDelay(ChaosBladeCommand):
 
 class PodRabbitmqDelay(ChaosBladeCommand):
 
-    def __init__(self, pod_prefix, time, duration, interval, namespace):
+    def __init__(self, pod_prefix, time, duration, interval, namespace, idx=0):
 
         super(PodRabbitmqDelay, self).__init__(duration, interval)
         self.fault_type = 'pod-rabbitmq-delay'
         self.pod_prefix = pod_prefix
         self.time = time
         self.namespace = namespace
+        self.idx = idx
 
     def __str__(self):
         return f'[pod-rabbitmq-delay] pod_prefix: {self.pod_prefix} namespace: {self.namespace} time: {self.time}'
 
     def init(self):
-        pod_name, container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.pod_prefix)
+        res = get_containers_id_with_host_ip(self.namespace, self.pod_prefix)
+        pod_name, container_id, host_ip = res[self.idx]
         if not container_id:
             logging.error(f'Cannot find pod which name start with {self.pod_prefix}')
             raise Exception(f'Cannot find pod which name start with {self.pod_prefix}')

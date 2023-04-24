@@ -1,12 +1,12 @@
 import logging
 
 from command.basic_command import ChaosBladeCommand
-from utils.k8s import get_one_container_id_with_host_ip
+from utils.k8s import get_one_container_id_with_host_ip, get_containers_id_with_host_ip
 
 
 class ApiDelay(ChaosBladeCommand):
 
-    def __init__(self, service, classname, methodname, time, duration, interval, namespace):
+    def __init__(self, service, classname, methodname, time, duration, interval, namespace, idx=0):
         """Chaosblade cri jvm delay
 
         For example:
@@ -33,13 +33,15 @@ class ApiDelay(ChaosBladeCommand):
         self.methodname = methodname
         self.time = time
         self.namespace = namespace
+        self.idx = idx
 
     def __str__(self):
         return f'[api-delay] service: {self.service} classname: {self.classname} methodname: {self.methodname} ' \
                f'time: {self.time} namespace: {self.namespace}'
 
     def init(self):
-        pod_name, container_id, host_ip = get_one_container_id_with_host_ip(self.namespace, self.service)
+        res = get_containers_id_with_host_ip(self.namespace, self.service)
+        pod_name, container_id, host_ip = res[self.idx]
         if not container_id or not host_ip:
             logging.error(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')
             raise Exception(f'init command failed, cannot find container: {self.service} in namespace {self.namespace}')

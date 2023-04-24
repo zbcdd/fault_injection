@@ -59,7 +59,9 @@ def _fault_injection(k8s: str, fault: str) -> None:
         fault_info['fault_name'] = fault_name
         fault_info['k8s_master_ip'] = k8s_master_ip
         fault_targets = fault['targets']
+        idx = 0
         for target in fault_targets:
+            fault_info['idx'] = idx % 2  # 最多两个实例
             if fault_name == 'multi-fault':
                 multi_faults = [i.strip() for i in target.split(' - ')]
                 actual_names = [i.strip() for i in multi_faults[0].split(' ')]
@@ -76,6 +78,7 @@ def _fault_injection(k8s: str, fault: str) -> None:
                 cmd = command_builder.build(fault_info, target)
                 cmd.record_data = record_data
                 command_scheduler.add_job(cmd)
+            idx += 1
 
     # run
     command_scheduler.start()

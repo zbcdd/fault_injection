@@ -1,0 +1,58 @@
+logs:
+  dir: ./logs/run_info/
+  format: "%(asctime)s - %(pathname)s[line:%(lineno)d] - %(levelname)s - %(message)s"
+
+records:
+  dir: ./records/
+  chaosmesh_records: http://10.176.122.154:30331/api/events  # chaosmesh events query url
+
+injection:
+  metadata:
+    st_time: 2023-04-24 16:30:00  # start time of all fault injection tasks
+    namespace: default  # train-ticket deployment namespace
+    chaosmesh:
+      tmp_dir: ./command/chaos_mesh/tmp/  # tmp dir to store the generated yaml files.
+      kinds:
+        - HTTPChaos
+    faults:
+      - multi-fault
+  spec:
+    multi-fault:
+      info:
+        duration: 360  # (s) duration of each fault
+        interval: 540  # (s) interval between two adjacent faults
+        time: 500  # (ms) delay time
+      targets:
+        - api-delay api-delay
+          - ts-verification-code-service verifycode.controller.VerifyCodeController imageCode
+          - ts-verification-code-service verifycode.controller.VerifyCodeController imageCode
+        - api-delay api-delay
+          - ts-rebook-service rebook.controller.RebookController rebook
+          - ts-rebook-service rebook.controller.RebookController rebook
+        - api-delay api-delay
+          - ts-cancel-service cancel.controller.CancelController calculate
+          - ts-cancel-service cancel.controller.CancelController calculate
+        - api-delay api-delay
+          - ts-consign-service consign.controller.ConsignController findByOrderId
+          - ts-consign-service consign.controller.ConsignController findByOrderId
+        - api-delay api-delay
+          - ts-preserve-other-service preserveOther.controller.PreserveOtherController preserve
+          - ts-preserve-other-service preserveOther.controller.PreserveOtherController preserve
+        - pod-typed-mysql-delay pod-typed-mysql-delay
+          - ts-train-food-service select
+          - ts-train-food-service select
+        - pod-typed-mysql-delay pod-typed-mysql-delay
+          - ts-price-service delete
+          - ts-price-service delete
+        - pod-mysql-delay pod-mysql-delay
+          - ts-config-service
+          - ts-config-service
+        - pod-mysql-delay pod-mysql-delay
+          - ts-travel-service
+          - ts-travel-service
+        - pod-mysql-delay pod-mysql-delay
+          - ts-inside-payment-service
+          - ts-inside-payment-service
+        - pod-rabbitmq-delay pod-rabbitmq-delay
+          - ts-food-service
+          - ts-food-service

@@ -23,10 +23,11 @@ class CommandBuilder(object):
         interface = fault_info['interface'] if 'interface' in fault_info else None
         tmp_dir = fault_info['chaosmesh_tmp_dir']
         k8s_master_ip = fault_info['k8s_master_ip']
+        idx = fault_info['idx']
         if command_name.startswith('api'):
             service, classname, methodname = target.strip().split()
             if command_name == 'api-delay':
-                return ApiDelay(service, classname, methodname, time, duration, interval, namespace)
+                return ApiDelay(service, classname, methodname, time, duration, interval, namespace, idx)
             if command_name == 'api-exception':
                 return ApiException(service, classname, methodname, duration, interval, namespace)
 
@@ -55,7 +56,7 @@ class CommandBuilder(object):
         if command_name in ('pod-mysql-delay', 'jvm-cpu-full', 'pod-cpu-full', 'svc-cpu-full', 'pod-rabbitmq-delay'):
             pod_prefix = target.strip()
             if command_name == 'pod-mysql-delay':
-                return PodMysqlDelay(pod_prefix, time, duration, interval, namespace)
+                return PodMysqlDelay(pod_prefix, time, duration, interval, namespace, idx)
             if command_name == 'jvm-cpu-full':
                 return JvmCpuFull(pod_prefix, duration, interval, namespace)
             if command_name == 'pod-cpu-full':
@@ -63,11 +64,11 @@ class CommandBuilder(object):
             if command_name == 'svc-cpu-full':
                 return SvcCpuFull(k8s_master_ip, pod_prefix, duration, interval, namespace)
             if command_name == 'pod-rabbitmq-delay':
-                return PodRabbitmqDelay(pod_prefix, time, duration, interval, namespace)
+                return PodRabbitmqDelay(pod_prefix, time, duration, interval, namespace, idx)
 
         if command_name == 'pod-typed-mysql-delay':
             pod_prefix, sqltype = target.strip().split()
-            return PodTypedMysqlDelay(pod_prefix, sqltype, time, duration, interval, namespace)
+            return PodTypedMysqlDelay(pod_prefix, sqltype, time, duration, interval, namespace, idx)
 
         logging.error(f'Cannot recognize command name: {command_name}')
         raise Exception(f'Cannot recognize command name: {command_name}')
