@@ -61,7 +61,6 @@ def _fault_injection(k8s: str, fault: str) -> None:
         fault_targets = fault['targets']
         idx = 0
         for target in fault_targets:
-            fault_info['idx'] = idx % 2  # 最多两个实例
             if fault_name == 'multi-fault':
                 multi_faults = [i.strip() for i in target.split(' - ')]
                 actual_names = [i.strip() for i in multi_faults[0].split(' ')]
@@ -69,16 +68,17 @@ def _fault_injection(k8s: str, fault: str) -> None:
                 assert len(actual_names) == len(actual_targets)
                 fault_index = 0
                 for actual_fault_name, actual_target in zip(actual_names, actual_targets):
+                    fault_info['idx'] = idx % 2  # 最多两个实例
                     fault_info['fault_name'] = actual_fault_name
                     cmd = command_builder.build(fault_info, actual_target)
                     cmd.record_data = record_data
                     command_scheduler.add_job(cmd, fault_index == len(actual_names)-1)
                     fault_index += 1
+                    idx += 1
             else:
                 cmd = command_builder.build(fault_info, target)
                 cmd.record_data = record_data
                 command_scheduler.add_job(cmd)
-            idx += 1
 
     # run
     command_scheduler.start()
